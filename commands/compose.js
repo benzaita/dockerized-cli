@@ -1,18 +1,13 @@
 const child_process = require('child_process')
 const path = require('path')
-const debug = require('debug')('builder:exec')
+const debug = require('debug')('builder:compose')
 const findBaseDir = require('../utils/find-base-dir')
 const readConfig = require('../utils/read-config')
 const prettifyErrors = require('../utils/prettify-errors')
 
-function execInDockerCompose(command, baseDir, dockerComposeFile) {
+function execDockerComposeCommand(command, baseDir, dockerComposeFile) {
   const args = [
     '-f', path.resolve(baseDir, dockerComposeFile),
-    'run',
-    '--rm',
-    '-v', `${baseDir}:${baseDir}`,
-    '-w', process.cwd(),
-    'builder',
     command
   ]
 
@@ -28,8 +23,8 @@ function execInDockerCompose(command, baseDir, dockerComposeFile) {
 }
 
 module.exports = {
-  command: 'exec',
-  desc: 'execute a command inside the builder',
+  command: 'compose',
+  desc: 'run a docker-compose command',
   builder: yargs => yargs,
   handler: prettifyErrors(async function exec(argv) {
     const command = process.argv.slice(3).join(' ')
@@ -37,6 +32,6 @@ module.exports = {
     const config = readConfig(baseDir)
     const dockerComposeFile = config.composeFile
 
-    execInDockerCompose(command, baseDir, dockerComposeFile)
+    execDockerComposeCommand(command, baseDir, dockerComposeFile)
   })
 }
