@@ -6,6 +6,7 @@
   "dependencies": {
     "debug": "^3.1.0",
     "dnif": "^0.2.0",
+    "js-yaml": "^3.10.0",
     "yargs": "^10.0.3"
   }
 }

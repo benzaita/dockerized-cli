@@ -1,22 +1,22 @@
 const fs = require('fs')
+const yaml = require('js-yaml')
 const prettifyErrors = require('../utils/prettify-errors')
 
-const composeFileTemplate = `
-version: '2'
-services:
-  # Keep this name so builder can find it
-  builder:
-    # Use whatever image you want
-    image: hub.int.klarna.net/exp/jenkins-agent:latest
-    # Keep this so builder can exec commands inside the container
-    entrypoint:
-      - "sh"
-      - "-c"
-    # Keep this to be able to run nested docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    network_mode: host
-`
+const composeConfig = {
+  version: '2',
+  services: {
+    builder: {
+      image: 'busybox',
+      entrypoint: [
+        'sh',
+        '-c'
+      ],
+      environment: [],
+      volumes: [],
+    }
+  },
+  volumes: {}
+}
 
 module.exports = {
   command: 'init',
@@ -27,6 +27,17 @@ module.exports = {
       default: 'docker-compose.builder.yml',
       describe: 'Docker-Compose file to use',
       type: 'string'
+    })
+    .option('y', {
+      alias: 'withYarnCache',
+      describe: 'Includes support for utilizing yarn cache',
+      type: 'boolean'
+    })
+    .option('d', {
+      alias: 'withNestedDocker',
+      describe: 'Includes support for running Docker inside Docker',
+      default: true,
+      type: 'boolean'
     }),
   handler: prettifyErrors(function init(argv) {
     const config = {
@@ -45,7 +56,18 @@ module.exports = {
     fs.writeFileSync('.builder/config.json', JSON.stringify(config, null, 2))
     console.error('created .builder/')
 
-    fs.writeFileSync(config.composeFile, composeFileTemplate)
+    if (argv.withYarnCache) {
+      composeConfig.services.builder.volumes.push('yarn-cache:/data/yarn-cache')
+      composeConfig.services.builder.environment.push('YARN_CACHE_FOLDER=/data/yarn-cache')
+      composeConfig.volumes['yarn-cache'] = {}
+    }
+
+    if (argv.withNestedDocker) {
+      composeConfig.services.builder.volumes.push('/var/run/docker.sock:/var/run/docker.sock')
+      composeConfig.services.builder.network_mode = 'host'
+    }
+
+    fs.writeFileSync(config.composeFile, yaml.safeDump(composeConfig))
     console.error(`created ${config.composeFile}`)
   })
 }
