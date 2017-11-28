@@ -6,10 +6,16 @@ version: '2'
 services:
   # Keep this name so builder can find it
   builder:
-    # Use whatever image you want. Just make sure
-    # it is able to run arbitrary commands, e.g.:
-    #   docker run YOUR_IMAGE ls -l
-    image: busybox
+    # Use whatever image you want
+    image: hub.int.klarna.net/exp/jenkins-agent:latest
+    # Keep this so builder can exec commands inside the container
+    entrypoint:
+      - "sh"
+      - "-c"
+    # Keep this to be able to run nested docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: host
 `
 
 module.exports = {
