@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 const yaml = require('js-yaml')
 const prettifyErrors = require('../utils/prettify-errors')
 
@@ -6,7 +7,9 @@ const composeConfig = {
   version: '2',
   services: {
     builder: {
-      image: 'busybox',
+      build: {
+        context: '.'
+      },
       entrypoint: [
         'sh',
         '-c'
@@ -18,14 +21,25 @@ const composeConfig = {
   volumes: {}
 }
 
+const dockerConfig = `
+FROM busybox
+# install your build dependencies here
+`
+
 module.exports = {
   command: 'init',
-  desc: 'initialize builder in this directory',
+  desc: 'initialize builder in this directory (see also: init --help)',
   builder: yargs => yargs
-    .option('f', {
-      alias: 'file',
-      default: 'docker-compose.builder.yml',
-      describe: 'Docker-Compose file to use',
+    .option('C', {
+      alias: 'composeFile',
+      default: '.builder/docker-compose.builder.yml',
+      describe: 'Docker-Compose file to create',
+      type: 'string'
+    })
+    .option('D', {
+      alias: 'dockerFile',
+      default: '.builder/Dockerfile.builder',
+      describe: 'Dockerfile to create',
       type: 'string'
     })
     .option('y', {
@@ -41,20 +55,25 @@ module.exports = {
     }),
   handler: prettifyErrors(function init(argv) {
     const config = {
-      composeFile: argv.file
+      composeFile: argv.composeFile
     }
 
     if (fs.existsSync('.builder')) {
       throw new Error('already initialized')
     }
 
-    if (fs.existsSync(config.composeFile)) {
-      throw new Error(`will not overwrite ${config.composeFile}. Use --file to choose a different name`)
+    if (fs.existsSync(argv.composeFile)) {
+      throw new Error(`will not overwrite ${argv.composeFile}. Use --composeFile to choose a different name`)
+    }
+
+    if (fs.existsSync(argv.dockerFile)) {
+      throw new Error(`will not overwrite ${argv.dockerFile}. Use --dockerFile to choose a different name`)
     }
 
     fs.mkdirSync('.builder')
     fs.writeFileSync('.builder/config.json', JSON.stringify(config, null, 2))
-    console.error('created .builder/')
+
+    composeConfig.services.builder.build.dockerfile = path.relative(path.dirname(argv.composeFile), argv.dockerFile)
 
     if (argv.withYarnCache) {
       composeConfig.services.builder.volumes.push('yarn-cache:/data/yarn-cache')
@@ -68,6 +87,10 @@ module.exports = {
     }
 
     fs.writeFileSync(config.composeFile, yaml.safeDump(composeConfig))
-    console.error(`created ${config.composeFile}`)
+
+    fs.writeFileSync(argv.dockerFile, dockerConfig)
+
+    console.error(`created ${argv.composeFile}`)
+    console.error(`created ${argv.dockerFile}`)
   })
 }
