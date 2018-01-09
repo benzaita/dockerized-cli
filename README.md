@@ -27,3 +27,7 @@ $ builder exec build-my-project
 ```sh
 $ builder init --withYarnCache
 ```
+
+### To Do
+
+- Add simple way to pass enviroment variables from the command line (e.g. `builder exec -e FOO=BAR command`)
