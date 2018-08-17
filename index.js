@@ -8,6 +8,7 @@ const argv = yargs
   .command(require('./commands/init'))
   .command(require('./commands/compose'))
   .command(require('./commands/shell'))
+  .command(require('./commands/clean'))
   .demandCommand()
   .help()
   .argv
