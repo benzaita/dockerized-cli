@@ -92,5 +92,6 @@ module.exports = {
 
     console.error(`created ${argv.composeFile}`)
     console.error(`created ${argv.dockerFile}`)
+    console.error(`hint: edit ${argv.dockerFile} to set up your container`)
   })
 }
