@@ -28,6 +28,14 @@ See the `examples/` folder.
 
 ## Advanced Usage
 
+### Environment variables
+
+The environment variables available to the dockerized command consists of:
+
+- Environment variables defined in `.builder/Dockerfile.builder`
+- Environment variables defined in `.builder/docker-compose.builder.yml`
+- Environment variables passed to the `exec` command: `builder exec FOO=1 BAR=2 COMMAND`
+
 ### My project uses Yarn - how do I utilize its cache?
 
 ```sh
