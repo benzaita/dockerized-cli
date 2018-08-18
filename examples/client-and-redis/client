@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+echo Pinging the Redis service...
+echo PING | nc -v redis 6379

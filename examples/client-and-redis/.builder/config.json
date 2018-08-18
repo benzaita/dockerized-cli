@@ -1,0 +1,3 @@
+{
+  "composeFile": ".builder/docker-compose.builder.yml"
+}

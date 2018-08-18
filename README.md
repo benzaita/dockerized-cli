@@ -1,6 +1,6 @@
 # builder 🏗❤️
 
-`builder` helps you express your build dependencies in code, and seamlessly use them - just `builder exec build-my-project`.
+`builder` helps you express your build dependencies in code, and seamlessly use them - just append `builder exec`!
 
 * Never again an outdated README file with all the tools you need to install to build your project.
 
@@ -22,12 +22,14 @@ FROM busybox
 $ builder exec build-my-project
 ```
 
+## Examples
+
+See the `examples/` folder.
+
+## Advanced Usage
+
 ### My project uses Yarn - how do I utilize its cache?
 
 ```sh
 $ builder init --withYarnCache
 ```
-
-### To Do
-
-- Add simple way to pass enviroment variables from the command line (e.g. `builder exec -e FOO=BAR command`)

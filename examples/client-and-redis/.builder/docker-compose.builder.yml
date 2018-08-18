@@ -1,0 +1,21 @@
+version: '2'
+services:
+  builder:
+    build:
+      context: .
+      dockerfile: Dockerfile.builder
+    entrypoint:
+      - sh
+      - '-c'
+    environment: []
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    depends_on:
+      - redis
+    links:
+      - redis
+
+  redis:
+    image: library/redis:4-alpine3.8
+
+volumes: {}
