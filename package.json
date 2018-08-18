@@ -1,12 +1,18 @@
 {
   "name": "builder",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "license": "MIT",
   "dependencies": {
     "debug": "^3.1.0",
     "dnif": "^0.2.0",
     "js-yaml": "^3.10.0",
     "yargs": "^10.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^5.4.0",
+    "eslint-config-prettier": "^3.0.1",
+    "husky": "^0.14.3",
+    "prettier": "^1.14.2"
   }
 }
