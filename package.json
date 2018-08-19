@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "MIT",
+  "scripts": {
+    "format": "prettier --write 'src/**'",
+    "lint": "eslint 'src/**'"
+  },
   "dependencies": {
     "debug": "^3.1.0",
     "dnif": "^0.2.0",
@@ -11,7 +15,9 @@
   },
   "devDependencies": {
     "eslint": "^5.4.0",
+    "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-import": "^2.14.0",
     "husky": "^0.14.3",
     "prettier": "^1.14.2"
   }

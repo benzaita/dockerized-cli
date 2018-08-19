@@ -7,7 +7,7 @@ function execDockerComposeCommand(command, baseDir, dockerComposeFile) {
   DockerCompose.spawn({
     baseDir,
     dockerComposeFile,
-    dockderComposeArgs: command,
+    _dockderComposeArgs: command
   })
 }
 
@@ -15,12 +15,12 @@ module.exports = {
   command: 'compose',
   desc: 'run a docker-compose command',
   builder: yargs => yargs,
-  handler: prettifyErrors(async function exec(argv) {
+  handler: prettifyErrors(async () => {
     const command = process.argv.slice(3)
     const baseDir = await findBaseDir()
     const config = readConfig(baseDir)
     const dockerComposeFile = config.composeFile
 
     execDockerComposeCommand(command, baseDir, dockerComposeFile)
-  }),
+  })
 }

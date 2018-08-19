@@ -1,4 +1,4 @@
-const DockerCompose = require("../utils/docker-compose")
+const DockerCompose = require('../utils/docker-compose')
 
 module.exports = function execInDockerCompose(
   command,
@@ -9,13 +9,13 @@ module.exports = function execInDockerCompose(
     baseDir,
     dockerComposeFile,
     dockderComposeArgs: [
-      "run",
-      "--rm",
-      "-v",
+      'run',
+      '--rm',
+      '-v',
       `${baseDir}:${baseDir}`,
-      "-w",
+      '-w',
       process.cwd(),
-      "builder",
+      'builder',
       command
     ]
   })

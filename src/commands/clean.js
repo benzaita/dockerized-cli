@@ -1,13 +1,13 @@
-const findBaseDir = require("../utils/find-base-dir")
-const readConfig = require("../utils/read-config")
-const prettifyErrors = require("../utils/prettify-errors")
-const DockerCompose = require("../utils/docker-compose")
+const findBaseDir = require('../utils/find-base-dir')
+const readConfig = require('../utils/read-config')
+const prettifyErrors = require('../utils/prettify-errors')
+const DockerCompose = require('../utils/docker-compose')
 
 module.exports = {
-  command: "clean",
-  desc: "removes the container",
+  command: 'clean',
+  desc: 'removes the container',
   builder: yargs => yargs,
-  handler: prettifyErrors(async function exec(argv) {
+  handler: prettifyErrors(async () => {
     const baseDir = await findBaseDir()
     const config = readConfig(baseDir)
     const dockerComposeFile = config.composeFile
@@ -15,7 +15,7 @@ module.exports = {
     DockerCompose.spawn({
       baseDir,
       dockerComposeFile,
-      dockderComposeArgs: ["down"]
+      dockderComposeArgs: ['down']
     })
   })
 }

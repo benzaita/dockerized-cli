@@ -6,7 +6,7 @@ module.exports = {
     es6: true
   },
   parserOptions: { ecmaVersion: 8 },
-  extends: ["prettier"],
+  extends: ["airbnb-base", "prettier"],
   rules: {
     "global-require": 0,
     "import/no-dynamic-require": 0,

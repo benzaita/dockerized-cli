@@ -1,16 +1,16 @@
-const fs = require("fs")
-const path = require("path")
-const yaml = require("js-yaml")
-const prettifyErrors = require("../utils/prettify-errors")
+const fs = require('fs')
+const path = require('path')
+const yaml = require('js-yaml')
+const prettifyErrors = require('../utils/prettify-errors')
 
 const composeConfig = {
-  version: "2",
+  version: '2',
   services: {
     builder: {
       build: {
-        context: "."
+        context: '.'
       },
-      entrypoint: ["sh", "-c"],
+      entrypoint: ['sh', '-c'],
       environment: [],
       volumes: []
     }
@@ -24,40 +24,40 @@ FROM busybox
 `
 
 module.exports = {
-  command: "init",
-  desc: "initialize builder in this directory (see also: init --help)",
+  command: 'init',
+  desc: 'initialize builder in this directory (see also: init --help)',
   builder: yargs =>
     yargs
-      .option("C", {
-        alias: "composeFile",
-        default: ".builder/docker-compose.builder.yml",
-        describe: "Docker-Compose file to create",
-        type: "string"
+      .option('C', {
+        alias: 'composeFile',
+        default: '.builder/docker-compose.builder.yml',
+        describe: 'Docker-Compose file to create',
+        type: 'string'
       })
-      .option("D", {
-        alias: "dockerFile",
-        default: ".builder/Dockerfile.builder",
-        describe: "Dockerfile to create",
-        type: "string"
+      .option('D', {
+        alias: 'dockerFile',
+        default: '.builder/Dockerfile.builder',
+        describe: 'Dockerfile to create',
+        type: 'string'
       })
-      .option("y", {
-        alias: "withYarnCache",
-        describe: "Includes support for utilizing yarn cache",
-        type: "boolean"
+      .option('y', {
+        alias: 'withYarnCache',
+        describe: 'Includes support for utilizing yarn cache',
+        type: 'boolean'
       })
-      .option("d", {
-        alias: "withNestedDocker",
-        describe: "Includes support for running Docker inside Docker",
+      .option('d', {
+        alias: 'withNestedDocker',
+        describe: 'Includes support for running Docker inside Docker',
         default: true,
-        type: "boolean"
+        type: 'boolean'
       }),
-  handler: prettifyErrors(function init(argv) {
+  handler: prettifyErrors((argv) => {
     const config = {
       composeFile: argv.composeFile
     }
 
-    if (fs.existsSync(".builder")) {
-      throw new Error("already initialized")
+    if (fs.existsSync('.builder')) {
+      throw new Error('already initialized')
     }
 
     if (fs.existsSync(argv.composeFile)) {
@@ -76,8 +76,8 @@ module.exports = {
       )
     }
 
-    fs.mkdirSync(".builder")
-    fs.writeFileSync(".builder/config.json", JSON.stringify(config, null, 2))
+    fs.mkdirSync('.builder')
+    fs.writeFileSync('.builder/config.json', JSON.stringify(config, null, 2))
 
     composeConfig.services.builder.build.dockerfile = path.relative(
       path.dirname(argv.composeFile),
@@ -85,18 +85,18 @@ module.exports = {
     )
 
     if (argv.withYarnCache) {
-      composeConfig.services.builder.volumes.push("yarn-cache:/data/yarn-cache")
+      composeConfig.services.builder.volumes.push('yarn-cache:/data/yarn-cache')
       composeConfig.services.builder.environment.push(
-        "YARN_CACHE_FOLDER=/data/yarn-cache"
+        'YARN_CACHE_FOLDER=/data/yarn-cache'
       )
-      composeConfig.volumes["yarn-cache"] = {}
+      composeConfig.volumes['yarn-cache'] = {}
     }
 
     if (argv.withNestedDocker) {
       composeConfig.services.builder.volumes.push(
-        "/var/run/docker.sock:/var/run/docker.sock"
+        '/var/run/docker.sock:/var/run/docker.sock'
       )
-      composeConfig.services.builder.network_mode = "host"
+      composeConfig.services.builder.network_mode = 'host'
     }
 
     fs.writeFileSync(config.composeFile, yaml.safeDump(composeConfig))
