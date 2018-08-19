@@ -51,7 +51,7 @@ module.exports = {
         default: true,
         type: 'boolean'
       }),
-  handler: prettifyErrors((argv) => {
+  handler: prettifyErrors(argv => {
     const config = {
       composeFile: argv.composeFile
     }
