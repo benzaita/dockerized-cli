@@ -11,6 +11,10 @@ Your build dependencies are part of your project.
 ## Getting Started
 
 ```sh
+$ npm install -g builder
+```
+
+```sh
 $ builder init
 created .builder/docker-compose.builder.yml
 created .builder/Dockerfile.builder
