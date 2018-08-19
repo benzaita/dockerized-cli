@@ -6,6 +6,7 @@
   "scripts": {
     "format": "prettier --write 'src/**'",
     "lint": "eslint 'src/**'",
+    "test": "jest",
     "precommit": "lint-staged"
   },
   "lint-staged": {
@@ -19,6 +20,7 @@
     "debug": "^3.1.0",
     "dnif": "^0.2.0",
     "js-yaml": "^3.10.0",
+    "md5": "^2.2.1",
     "yargs": "^10.0.3"
   },
   "devDependencies": {
@@ -27,6 +29,7 @@
     "eslint-config-prettier": "^3.0.1",
     "eslint-plugin-import": "^2.14.0",
     "husky": "^0.14.3",
+    "jest": "^23.5.0",
     "lint-staged": "^7.2.2",
     "prettier": "^1.14.2"
   }

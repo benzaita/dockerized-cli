@@ -1,7 +1,7 @@
 const findBaseDir = require('../utils/find-base-dir')
-const readConfig = require('../utils/read-config')
+const readConfig = require('../utils/read-config')()
 const prettifyErrors = require('../utils/prettify-errors')
-const execInDockerCompose = require('../utils/exec-in-docker-compose')
+const execInDockerCompose = require('../utils/run-in-container')
 
 module.exports = {
   command: 'shell',
@@ -13,6 +13,6 @@ module.exports = {
     const config = readConfig(baseDir)
     const dockerComposeFile = config.composeFile
 
-    execInDockerCompose(command, baseDir, dockerComposeFile)
+    execInDockerCompose({ command, baseDir, dockerComposeFile })
   })
 }

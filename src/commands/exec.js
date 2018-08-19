@@ -1,7 +1,7 @@
-const findBaseDir = require('../utils/find-base-dir')
-const readConfig = require('../utils/read-config')
+const execFactory = require('../operations/exec')
 const prettifyErrors = require('../utils/prettify-errors')
-const execInDockerCompose = require('../utils/exec-in-docker-compose')
+const findBaseDir = require('../utils/find-base-dir')
+const readConfig = require('../utils/read-config')()
 
 const epilog = `
 Environment variables:
@@ -15,12 +15,15 @@ module.exports = {
   command: 'exec',
   desc: 'execute a command inside the builder',
   builder: yargs => yargs.epilog(epilog),
-  handler: prettifyErrors(async () => {
-    const command = process.argv.slice(3).join(' ')
+  handler: async () => {
     const baseDir = await findBaseDir()
     const config = readConfig(baseDir)
-    const dockerComposeFile = config.composeFile
+    const exec = execFactory({ config, baseDir })
 
-    execInDockerCompose(command, baseDir, dockerComposeFile)
-  })
+    prettifyErrors(async () => {
+      const command = process.argv.slice(3).join(' ')
+      const completion = await exec(command)
+      process.exit(completion.code)
+    })()
+  }
 }
