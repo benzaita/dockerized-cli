@@ -1,7 +1,10 @@
-module.exports = fn => argv => {
+const debug = require('debug')('builder')
+
+module.exports = fn => async argv => {
   try {
-    fn(argv)
+    await fn(argv)
   } catch (e) {
+    debug(e)
     console.error(e.message)
     process.exit(1)
   }

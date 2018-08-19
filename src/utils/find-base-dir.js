@@ -3,17 +3,24 @@ const findUp = require("dnif")
 
 module.exports = function findBaseDir() {
   return new Promise((resolve, reject) => {
+
+    const options = {
+      name: ".builder",
+      startPath: process.cwd()
+    }
     findUp(
-      {
-        name: ".builder",
-        startPath: process.cwd()
-      },
+      options,
       (err, dir) => {
         if (err) {
           reject(new Error(err))
         }
-        debug(`found .builder in ${dir}`)
-        resolve(dir)
+        else if (dir === null) {
+          reject(new Error(`could not find ${options.name} (did you run 'builder init'?)`))
+        }
+        else {
+          debug(`found .builder in ${dir}`)
+          resolve(dir)
+        }
       }
     )
   })
