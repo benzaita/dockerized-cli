@@ -1,0 +1,5 @@
+{
+  "composeFile": ".builder/docker-compose.builder.yml",
+  "composeFileFingerprint": "faf772e8a4cfcaea348cde741d618589",
+  "fingerprint": "b59008138f2ab2f00b4e1333f0126e4a"
+}
