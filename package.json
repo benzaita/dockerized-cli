@@ -21,6 +21,7 @@
     "dnif": "^0.2.0",
     "js-yaml": "^3.10.0",
     "md5": "^2.2.1",
+    "ramda": "^0.25.0",
     "yargs": "^10.0.3"
   },
   "devDependencies": {

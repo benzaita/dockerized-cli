@@ -1,18 +1,21 @@
 const findBaseDir = require('../utils/find-base-dir')
 const readConfig = require('../utils/read-config')()
 const prettifyErrors = require('../utils/prettify-errors')
-const execInDockerCompose = require('../utils/run-in-container')
+const execFactory = require('../operations/exec')
 
 module.exports = {
   command: 'shell',
   desc: 'drop into an interactive shell inside the builder',
   builder: yargs => yargs,
-  handler: prettifyErrors(async () => {
-    const command = '/bin/sh'
+  handler: async () => {
     const baseDir = await findBaseDir()
     const config = readConfig(baseDir)
-    const dockerComposeFile = config.composeFile
+    const exec = execFactory({ config, baseDir })
 
-    execInDockerCompose({ command, baseDir, dockerComposeFile })
-  })
+    prettifyErrors(async () => {
+      const command = '/bin/sh'
+      const completion = await exec(command)
+      process.exit(completion.code)
+    })()
+  }
 }
