@@ -4,7 +4,7 @@ const yargs = require('yargs')
 
 // eslint-disable-next-line no-unused-expressions
 yargs
-  .usage('builder COMMAND')
+  .usage('cenv COMMAND')
   .command(require('./commands/exec'))
   .command(require('./commands/init'))
   .command(require('./commands/compose'))

@@ -1,9 +1,9 @@
 version: '2'
 services:
-  builder:
+  cenv:
     build:
       context: .
-      dockerfile: Dockerfile.builder
+      dockerfile: Dockerfile.cenv
     entrypoint:
       - sh
       - '-c'

@@ -1,10 +1,10 @@
-const debug = require('debug')('builder:find-base-dir')
+const debug = require('debug')('cenv:find-base-dir')
 const findUp = require('dnif')
 
 module.exports = function findBaseDir() {
   return new Promise((resolve, reject) => {
     const options = {
-      name: '.builder',
+      name: '.cenv',
       startPath: process.cwd()
     }
     findUp(options, (err, dir) => {
@@ -12,12 +12,10 @@ module.exports = function findBaseDir() {
         reject(new Error(err))
       } else if (dir === null) {
         reject(
-          new Error(
-            `could not find ${options.name} (did you run 'builder init'?)`
-          )
+          new Error(`could not find ${options.name} (did you run 'cenv init'?)`)
         )
       } else {
-        debug(`found .builder in ${dir}`)
+        debug(`found .cenv in ${dir}`)
         resolve(dir)
       }
     })

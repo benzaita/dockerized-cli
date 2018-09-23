@@ -5,7 +5,7 @@ const execFactory = require('../operations/exec')
 
 module.exports = {
   command: 'shell',
-  desc: 'drop into an interactive shell inside the builder',
+  desc: 'drop into an interactive shell inside the cenv',
   builder: yargs => yargs,
   handler: async () => {
     const baseDir = await findBaseDir()

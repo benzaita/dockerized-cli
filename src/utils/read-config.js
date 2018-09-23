@@ -1,4 +1,4 @@
-const debug = require('debug')('builder:read-config')
+const debug = require('debug')('cenv:read-config')
 const fs = require('fs')
 const path = require('path')
 const md5 = require('md5')
@@ -23,19 +23,17 @@ module.exports = ({ readFile = fs.readFileSync } = {}) => baseDir => {
     }
   }
 
-  const config = JSON.parse(readFileSafe(path.join('.builder', 'config.json')))
+  const config = JSON.parse(readFileSafe(path.join('.cenv', 'config.json')))
 
   const composeFileString = readFileSafe(config.composeFile)
   config.composeFileFingerprint = md5Safe(composeFileString)
 
   const composeFileJson = yaml.safeLoad(composeFileString)
   const dockerFilePath = R.path(
-    ['services', 'builder', 'build', 'dockerfile'],
+    ['services', 'cenv', 'build', 'dockerfile'],
     composeFileJson
   )
-  const dockerFileString = readFileSafe(
-    pathJoinSafe('.builder', dockerFilePath)
-  )
+  const dockerFileString = readFileSafe(pathJoinSafe('.cenv', dockerFilePath))
   config.dockerFileFingerprint = md5Safe(dockerFileString)
 
   return config

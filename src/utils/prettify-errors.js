@@ -1,4 +1,4 @@
-const debug = require('debug')('builder')
+const debug = require('debug')('cenv')
 
 module.exports = fn => async argv => {
   try {

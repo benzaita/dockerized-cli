@@ -1,4 +1,4 @@
-const debug = require('debug')('builder:exec')
+const debug = require('debug')('cenv:exec')
 const _runInContainer = require('../utils/run-in-container')
 const _runDockerCompose = require('../utils/run-docker-compose')
 const _writeConfig = require('../utils/write-config')

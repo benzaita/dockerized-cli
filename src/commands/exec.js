@@ -8,12 +8,12 @@ Environment variables:
   To provide environment variables, either add them in the docker-compose
   file or pass them in the command line:
 
-  builder exec FOO=1 BAR=2 COMMAND
+  cenv exec FOO=1 BAR=2 COMMAND
 `
 
 module.exports = {
   command: 'exec',
-  desc: 'execute a command inside the builder',
+  desc: 'execute a command inside the cenv',
   builder: yargs => yargs.epilog(epilog),
   handler: async () => {
     const baseDir = await findBaseDir()
