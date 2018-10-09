@@ -1,0 +1,6 @@
+{
+  "composeFile": ".dockerized/docker-compose.dockerized.yml",
+  "composeFileFingerprint": "2ad549fc4a0c353db910f185aa2c79be",
+  "dockerFileFingerprint": "9ca820782dcb986799c0fb683505c93c",
+  "fingerprint": "18b8a835f00008a0cf09c3ea664ac8c5"
+}
