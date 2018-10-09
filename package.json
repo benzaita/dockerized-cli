@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "main": "src/index.js",
   "license": "MIT",
+  "bin": {
+    "dockerized": "bin/dockerized"
+  },
   "scripts": {
     "format": "prettier --write 'src/**'",
     "lint": "eslint 'src/**'",
