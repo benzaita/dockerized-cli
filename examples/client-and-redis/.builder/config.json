@@ -1,3 +1,3 @@
 {
-  "composeFile": ".cenv/docker-compose.cenv.yml"
+  "composeFile": ".dockerized/docker-compose.dockerized.yml"
 }

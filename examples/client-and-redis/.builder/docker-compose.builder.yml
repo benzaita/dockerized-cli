@@ -1,9 +1,9 @@
 version: '2'
 services:
-  cenv:
+  dockerized:
     build:
       context: .
-      dockerfile: Dockerfile.cenv
+      dockerfile: Dockerfile.dockerized
     entrypoint:
       - sh
       - '-c'

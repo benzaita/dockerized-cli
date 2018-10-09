@@ -1,11 +1,11 @@
 # Environment Variables
 
-This example shows how to pass arbitrary environment variables to a command that `cenv` executes.
+This example shows how to pass arbitrary environment variables to a command that `dockerized` executes.
 
 Simply prepend the command with `KEY=VALUE` pairs:
 
 ```sh
-$ cenv exec FOO=foo BAR=bar env
+$ dockerized exec FOO=foo BAR=bar env
 HOSTNAME=linuxkit-025000000001
 SHLVL=1
 HOME=/root
