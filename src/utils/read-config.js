@@ -1,4 +1,4 @@
-const debug = require('debug')('cenv:read-config')
+const debug = require('debug')('dockerized:read-config')
 const fs = require('fs')
 const path = require('path')
 const md5 = require('md5')
@@ -23,17 +23,21 @@ module.exports = ({ readFile = fs.readFileSync } = {}) => baseDir => {
     }
   }
 
-  const config = JSON.parse(readFileSafe(path.join('.cenv', 'config.json')))
+  const config = JSON.parse(
+    readFileSafe(path.join('.dockerized', 'config.json'))
+  )
 
   const composeFileString = readFileSafe(config.composeFile)
   config.composeFileFingerprint = md5Safe(composeFileString)
 
   const composeFileJson = yaml.safeLoad(composeFileString)
   const dockerFilePath = R.path(
-    ['services', 'cenv', 'build', 'dockerfile'],
+    ['services', 'dockerized', 'build', 'dockerfile'],
     composeFileJson
   )
-  const dockerFileString = readFileSafe(pathJoinSafe('.cenv', dockerFilePath))
+  const dockerFileString = readFileSafe(
+    pathJoinSafe('.dockerized', dockerFilePath)
+  )
   config.dockerFileFingerprint = md5Safe(dockerFileString)
 
   return config

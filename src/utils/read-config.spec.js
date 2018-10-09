@@ -17,7 +17,7 @@ const createReadConfig = ({ mockFilesystem }) => {
 it('does not fail when composeFile is undefined', () => {
   const readConfig = createReadConfig({
     mockFilesystem: {
-      'base-dir/.cenv/config.json': '{}'
+      'base-dir/.dockerized/config.json': '{}'
     }
   })
 
@@ -27,12 +27,12 @@ it('does not fail when composeFile is undefined', () => {
 it('sets composeFileFingerprint to the fingerprint of the content of the docker-compose file', () => {
   // given
   const configFileContent = JSON.stringify({
-    composeFile: '.cenv/compose-file.yml'
+    composeFile: '.dockerized/compose-file.yml'
   })
   const readConfig = createReadConfig({
     mockFilesystem: {
-      'base-dir/.cenv/config.json': configFileContent,
-      'base-dir/.cenv/compose-file.yml': 'compose-file-content'
+      'base-dir/.dockerized/config.json': configFileContent,
+      'base-dir/.dockerized/compose-file.yml': 'compose-file-content'
     }
   })
 
@@ -46,15 +46,15 @@ it('sets composeFileFingerprint to the fingerprint of the content of the docker-
 it('sets dockerFileFingerprint to the fingerprint of the content of the docker file', () => {
   // given
   const configFileContent = JSON.stringify({
-    composeFile: '.cenv/compose-file.yml'
+    composeFile: '.dockerized/compose-file.yml'
   })
   const readConfig = createReadConfig({
     mockFilesystem: {
-      'base-dir/.cenv/config.json': configFileContent,
-      'base-dir/.cenv/compose-file.yml': jsonToYaml({
-        services: { cenv: { build: { dockerfile: 'Dockerfile' } } }
+      'base-dir/.dockerized/config.json': configFileContent,
+      'base-dir/.dockerized/compose-file.yml': jsonToYaml({
+        services: { dockerized: { build: { dockerfile: 'Dockerfile' } } }
       }),
-      'base-dir/.cenv/Dockerfile': 'docker-file-content'
+      'base-dir/.dockerized/Dockerfile': 'docker-file-content'
     }
   })
 

@@ -1,4 +1,4 @@
-const debug = require('debug')('cenv')
+const debug = require('debug')('dockerized')
 
 module.exports = fn => async argv => {
   try {

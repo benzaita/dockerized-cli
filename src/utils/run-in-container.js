@@ -17,7 +17,7 @@ module.exports = ({
       `${baseDir}:${baseDir}`,
       '-w',
       process.cwd(),
-      'cenv',
+      'dockerized',
       command
     ]
   })

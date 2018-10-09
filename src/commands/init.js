@@ -6,7 +6,7 @@ const prettifyErrors = require('../utils/prettify-errors')
 const composeConfig = {
   version: '2',
   services: {
-    cenv: {
+    dockerized: {
       build: {
         context: '.'
       },
@@ -25,18 +25,18 @@ FROM busybox
 
 module.exports = {
   command: 'init',
-  desc: 'initialize cenv in this directory (see also: init --help)',
+  desc: 'initialize dockerized in this directory (see also: init --help)',
   builder: yargs =>
     yargs
       .option('C', {
         alias: 'composeFile',
-        default: '.cenv/docker-compose.cenv.yml',
+        default: '.dockerized/docker-compose.dockerized.yml',
         describe: 'Docker-Compose file to create',
         type: 'string'
       })
       .option('D', {
         alias: 'dockerFile',
-        default: '.cenv/Dockerfile.cenv',
+        default: '.dockerized/Dockerfile.dockerized',
         describe: 'Dockerfile to create',
         type: 'string'
       })
@@ -56,7 +56,7 @@ module.exports = {
       composeFile: argv.composeFile
     }
 
-    if (fs.existsSync('.cenv')) {
+    if (fs.existsSync('.dockerized')) {
       throw new Error('already initialized')
     }
 
@@ -76,27 +76,29 @@ module.exports = {
       )
     }
 
-    fs.mkdirSync('.cenv')
-    fs.writeFileSync('.cenv/config.json', JSON.stringify(config, null, 2))
+    fs.mkdirSync('.dockerized')
+    fs.writeFileSync('.dockerized/config.json', JSON.stringify(config, null, 2))
 
-    composeConfig.services.cenv.build.dockerfile = path.relative(
+    composeConfig.services.dockerized.build.dockerfile = path.relative(
       path.dirname(argv.composeFile),
       argv.dockerFile
     )
 
     if (argv.withYarnCache) {
-      composeConfig.services.cenv.volumes.push('yarn-cache:/data/yarn-cache')
-      composeConfig.services.cenv.environment.push(
+      composeConfig.services.dockerized.volumes.push(
+        'yarn-cache:/data/yarn-cache'
+      )
+      composeConfig.services.dockerized.environment.push(
         'YARN_CACHE_FOLDER=/data/yarn-cache'
       )
       composeConfig.volumes['yarn-cache'] = {}
     }
 
     if (argv.withNestedDocker) {
-      composeConfig.services.cenv.volumes.push(
+      composeConfig.services.dockerized.volumes.push(
         '/var/run/docker.sock:/var/run/docker.sock'
       )
-      composeConfig.services.cenv.network_mode = 'host'
+      composeConfig.services.dockerized.network_mode = 'host'
     }
 
     fs.writeFileSync(config.composeFile, yaml.safeDump(composeConfig))

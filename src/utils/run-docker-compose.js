@@ -1,6 +1,6 @@
 const childProcess = require('child_process')
 const path = require('path')
-const debug = require('debug')('cenv:docker-compose')
+const debug = require('debug')('dockerized:docker-compose')
 const Completion = require('./completion')
 
 const runDockerCompose = ({
