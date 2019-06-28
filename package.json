@@ -21,21 +21,40 @@
     ]
   },
   "dependencies": {
+    "@babel/preset-typescript": "^7.3.3",
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "@typescript-eslint/parser": "^1.11.0",
+    "babel-jest": "^24.8.0",
     "debug": "^3.1.0",
     "dnif": "^0.2.0",
+    "eslint-plugin-prettier": "^3.1.0",
     "js-yaml": "^3.10.0",
     "md5": "^2.2.1",
     "ramda": "^0.25.0",
     "yargs": "^10.0.3"
   },
   "devDependencies": {
-    "eslint": "^5.4.0",
+    "@types/debug": "^4.1.4",
+    "@types/jest": "^24.0.15",
+    "@types/js-yaml": "^3.12.1",
+    "@types/md5": "^2.1.33",
+    "@types/node": "^12.0.10",
+    "@types/ramda": "^0.26.12",
+    "@types/yargs": "^13.0.0",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-config-prettier": "^3.0.1",
+    "eslint-config-prettier": "^3.6.0",
     "eslint-plugin-import": "^2.14.0",
     "husky": "^0.14.3",
-    "jest": "^23.5.0",
+    "jest": "^24.8.0",
     "lint-staged": "^7.2.2",
-    "prettier": "^1.14.2"
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.2"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "rootDir": "src"
   }
 }

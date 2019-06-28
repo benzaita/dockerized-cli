@@ -1,7 +1,9 @@
-const execFactory = require('../operations/exec')
-const prettifyErrors = require('../utils/prettify-errors')
-const findBaseDir = require('../utils/find-base-dir')
-const readConfig = require('../utils/read-config')()
+import execFactory from '../operations/exec';
+import prettifyErrors from '../utils/prettify-errors';
+import findBaseDir from '../utils/find-base-dir';
+import createReadConfig from '../utils/read-config';
+
+const readConfig = createReadConfig();
 
 const epilog = `
 Environment variables:
@@ -9,21 +11,21 @@ Environment variables:
   file or pass them in the command line:
 
   dockerized exec FOO=1 BAR=2 COMMAND
-`
+`;
 
-module.exports = {
-  command: 'exec',
-  desc: 'execute a command inside the dockerized',
-  builder: yargs => yargs.epilog(epilog),
-  handler: async () => {
-    const baseDir = await findBaseDir()
-    const config = readConfig(baseDir)
-    const exec = execFactory({ config, baseDir })
+export default {
+    command: 'exec.ts',
+    desc: 'execute a command inside the dockerized',
+    builder: yargs => yargs.epilog(epilog),
+    handler: async () => {
+        const baseDir = await findBaseDir();
+        const config = readConfig(baseDir);
+        const exec = execFactory({ config, baseDir });
 
-    prettifyErrors(async () => {
-      const command = process.argv.slice(3).join(' ')
-      const completion = await exec(command)
-      process.exit(completion.code)
-    })()
-  }
-}
+        prettifyErrors(async () => {
+            const command = process.argv.slice(3).join(' ');
+            const completion = await exec(command);
+            process.exit(completion.code);
+        })();
+    },
+};
