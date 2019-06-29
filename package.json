@@ -11,6 +11,7 @@
     "format": "prettier --write 'src/**'",
     "lint": "eslint 'src/**'",
     "test": "jest",
+    "prepare": "tsc",
     "precommit": "lint-staged"
   },
   "lint-staged": {
