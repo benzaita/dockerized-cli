@@ -21,19 +21,19 @@
     ]
   },
   "dependencies": {
-    "@babel/preset-typescript": "^7.3.3",
-    "@typescript-eslint/eslint-plugin": "^1.11.0",
-    "@typescript-eslint/parser": "^1.11.0",
-    "babel-jest": "^24.8.0",
     "debug": "^3.1.0",
     "dnif": "^0.2.0",
-    "eslint-plugin-prettier": "^3.1.0",
-    "js-yaml": "^3.10.0",
+    "js-yaml": "^3.13.1",
     "md5": "^2.2.1",
     "ramda": "^0.25.0",
     "yargs": "^10.0.3"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.3.3",
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "@typescript-eslint/parser": "^1.11.0",
+    "babel-jest": "^24.8.0",
+    "eslint-plugin-prettier": "^3.1.0",
     "@types/debug": "^4.1.4",
     "@types/jest": "^24.0.15",
     "@types/js-yaml": "^3.12.1",
