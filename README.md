@@ -27,7 +27,7 @@ $ npm install -g dockerized
 $ dockerized COMMAND
 running command...
 $ dockerized (-v|--version|version)
-dockerized/0.2.0 darwin-x64 node-v8.15.1
+dockerized/0.3.0 darwin-x64 node-v8.15.1
 $ dockerized --help [COMMAND]
 USAGE
   $ dockerized COMMAND
@@ -61,7 +61,7 @@ See the `examples/` folder.
 <!-- commands -->
 * [`dockerized clean`](#dockerized-clean)
 * [`dockerized compose`](#dockerized-compose)
-* [`dockerized exec`](#dockerized-exec)
+* [`dockerized $ dockerized exec COMMAND`](#dockerized--dockerized-exec-command)
 * [`dockerized help [COMMAND]`](#dockerized-help-command)
 * [`dockerized init`](#dockerized-init)
 * [`dockerized shell`](#dockerized-shell)
@@ -78,7 +78,7 @@ EXAMPLE
   $ dockerized clean
 ```
 
-_See code: [src/commands/clean.ts](https://github.com/benzaita/dockerized/blob/v0.2.0/src/commands/clean.ts)_
+_See code: [src/commands/clean.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/clean.ts)_
 
 ## `dockerized compose`
 
@@ -93,15 +93,15 @@ EXAMPLES
   ...
 ```
 
-_See code: [src/commands/compose.ts](https://github.com/benzaita/dockerized/blob/v0.2.0/src/commands/compose.ts)_
+_See code: [src/commands/compose.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/compose.ts)_
 
-## `dockerized exec`
+## `dockerized $ dockerized exec COMMAND`
 
-execute a command inside the dockerized
+execute a command inside the dockerized environment
 
 ```
 USAGE
-  $ dockerized exec
+  $ dockerized $ dockerized exec COMMAND
 
 DESCRIPTION
   Environment variables:
@@ -109,9 +109,14 @@ DESCRIPTION
      file or pass them in the command line:
 
      dockerized exec FOO=1 BAR=2 COMMAND
+
+EXAMPLES
+  $ dockerized exec ls -l
+  $ dockerized exec make build
+  $ dockerized exec mvn
 ```
 
-_See code: [src/commands/exec.ts](https://github.com/benzaita/dockerized/blob/v0.2.0/src/commands/exec.ts)_
+_See code: [src/commands/exec.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/exec.ts)_
 
 ## `dockerized help [COMMAND]`
 
@@ -141,14 +146,14 @@ USAGE
 OPTIONS
   -C, --composeFile=composeFile  [default: .dockerized/docker-compose.dockerized.yml] Docker-Compose file to create
   -D, --dockerFile=dockerFile    [default: .dockerized/Dockerfile.dockerized] Dockerfile to create
-  -d, --withNestedDocker         Includes support for running Docker inside Docker
-  -y, --withYarnCache            Includes support for utilizing yarn cache
+  -d, --[no-]withNestedDocker    Includes support for running Docker inside Docker
+  -y, --[no-]withYarnCache       Includes support for utilizing yarn cache
 
 EXAMPLE
   $ dockerized init
 ```
 
-_See code: [src/commands/init.ts](https://github.com/benzaita/dockerized/blob/v0.2.0/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/init.ts)_
 
 ## `dockerized shell`
 
@@ -159,7 +164,7 @@ USAGE
   $ dockerized shell
 ```
 
-_See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized/blob/v0.2.0/src/commands/shell.ts)_
+_See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/shell.ts)_
 <!-- commandsstop -->
 
 ## Advanced Usage
