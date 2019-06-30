@@ -1,35 +1,24 @@
 {
-  "name": "dockerized-cli",
+  "name": "dockerized",
   "version": "0.2.0",
-  "main": "src/index.js",
-  "license": "MIT",
-  "repository": "https://github.com/benzaita/dockerized-cli",
+  "author": "ItamarB @benzaita",
   "bin": {
-    "dockerized": "bin/dockerized"
+    "dockerized": "./bin/run"
   },
-  "scripts": {
-    "format": "prettier --write 'src/**'",
-    "lint": "eslint 'src/**'",
-    "test": "jest",
-    "prepare": "tsc",
-    "precommit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.js": [
-      "yarn format",
-      "yarn lint",
-      "git add"
-    ]
-  },
+  "bugs": "https://github.com/benzaita/dockerized/issues",
   "dependencies": {
+    "@oclif/command": "^1.5.15",
+    "@oclif/config": "^1.13.0",
+    "@oclif/plugin-help": "^2.2.0",
+    "tslib": "^1.10.0",
     "debug": "^3.1.0",
     "dnif": "^0.2.0",
     "js-yaml": "^3.13.1",
     "md5": "^2.2.1",
-    "ramda": "^0.25.0",
-    "yargs": "^10.0.3"
+    "ramda": "^0.25.0"
   },
   "devDependencies": {
+    "@oclif/dev-cli": "^1.22.0",
     "@babel/preset-typescript": "^7.3.3",
     "@typescript-eslint/eslint-plugin": "^1.11.0",
     "@typescript-eslint/parser": "^1.11.0",
@@ -39,7 +28,10 @@
     "@types/jest": "^24.0.15",
     "@types/js-yaml": "^3.12.1",
     "@types/md5": "^2.1.33",
-    "@types/node": "^12.0.10",
+    "@types/node": "^10.14.10",
+    "globby": "^8.0.2",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.2",
     "@types/ramda": "^0.26.12",
     "@types/yargs": "^13.0.0",
     "eslint": "^5.16.0",
@@ -50,12 +42,51 @@
     "jest": "^24.8.0",
     "lint-staged": "^7.2.2",
     "prettier": "^1.18.2",
-    "ts-jest": "^24.0.2",
-    "typescript": "^3.5.2"
+    "ts-jest": "^24.0.2"
   },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
     "rootDir": "src"
-  }
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/benzaita/dockerized",
+  "keywords": [
+    "oclif"
+  ],
+  "lint-staged": {
+    "*.js": [
+      "yarn format",
+      "yarn lint",
+      "git add"
+    ]
+  },
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "dockerized",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "benzaita/dockerized",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "version": "oclif-dev readme && git add README.md",
+    "format": "prettier --write 'src/**'",
+    "lint": "eslint 'src/**'",
+    "test": "jest",
+    "precommit": "lint-staged"
+  },
+  "types": "lib/index.d.ts"
 }

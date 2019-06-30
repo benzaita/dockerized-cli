@@ -5,6 +5,10 @@ export default class Completion {
         this.code = code;
     }
 
+    public getCode() {
+        return this.code;
+    }
+
     public static of(code: number): Completion {
         return new Completion(code);
     }

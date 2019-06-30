@@ -3,9 +3,9 @@ import createDebug from 'debug';
 const debug = createDebug('dockerized');
 
 export default function prettifyErrors(fn: Function) {
-    return async function(argv: string[]) {
+    return async function() {
         try {
-            await fn(argv);
+            await fn();
         } catch (e) {
             debug(e);
             console.error(e.message);
