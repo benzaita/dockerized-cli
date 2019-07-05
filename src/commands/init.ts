@@ -44,13 +44,14 @@ export default class Init extends Command {
             default: '.dockerized/Dockerfile.dockerized',
         }),
         withYarnCache: flags.boolean({
-            char: 'y',
             description: 'Includes support for utilizing yarn cache',
             default: false,
-            allowNo: true,
+        }),
+        withGoCache: flags.boolean({
+            description: 'Includes a volume for GOPATH',
+            default: false,
         }),
         withNestedDocker: flags.boolean({
-            char: 'd',
             description: 'Includes support for running Docker inside Docker',
             default: true,
             allowNo: true,
@@ -91,6 +92,12 @@ export default class Init extends Command {
                 composeConfig.services.dockerized.volumes.push('yarn-cache:/data/yarn-cache');
                 composeConfig.services.dockerized.environment.push('YARN_CACHE_FOLDER=/data/yarn-cache');
                 composeConfig.volumes['yarn-cache'] = {};
+            }
+
+            if (flags.withGoCache) {
+                composeConfig.services.dockerized.volumes.push('go-cache:/go');
+                composeConfig.services.dockerized.environment.push('GOPATH=/go');
+                composeConfig.volumes['go-cache'] = {};
             }
 
             if (flags.withNestedDocker) {
