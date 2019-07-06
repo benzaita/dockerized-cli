@@ -19,12 +19,12 @@ export default class Exec extends Command {
     
 ${epilog}`;
 
-    public static usage = `$ dockerized exec COMMAND`
+    public static usage = `exec [NAME=VALUE ...] COMMAND`
 
     public static examples = [
         `$ dockerized exec ls -l`,
         `$ dockerized exec make build`,
-        `$ dockerized exec mvn`,
+        `$ dockerized exec mvn`
     ]
 
     public async run() {

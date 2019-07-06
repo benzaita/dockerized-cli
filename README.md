@@ -2,9 +2,9 @@ dockerized 🏗❤️
 ================
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/dockerized.svg)](https://npmjs.org/package/dockerized)
-[![Downloads/week](https://img.shields.io/npm/dw/dockerized.svg)](https://npmjs.org/package/dockerized)
-[![License](https://img.shields.io/npm/l/dockerized.svg)](https://github.com/benzaita/dockerized/blob/master/package.json)
+[![Version](https://img.shields.io/npm/v/dockerized-cli.svg)](https://npmjs.org/package/dockerized-cli)
+[![Downloads/week](https://img.shields.io/npm/dw/dockerized-cli.svg)](https://npmjs.org/package/dockerized-cli)
+[![License](https://img.shields.io/npm/l/dockerized-cli.svg)](https://github.com/benzaita/dockerized-cli/blob/master/package.json)
 
 `dockerized` helps you express your build dependencies in code, and seamlessly use them - just append `dockerized exec`!
 
@@ -14,12 +14,15 @@ dockerized 🏗❤️
 
 Your build dependencies are part of your project.
 
+Contents:
+
+* [Usage](#Usage)
+* [Examples](#Examples)
 <!-- toc -->
-* [install your build dependencies here](#install-your-build-dependencies-here)
 * [Commands](#commands)
 <!-- tocstop -->
 
-## Usage
+# Usage
 
 <!-- usage -->
 ```sh-session
@@ -35,27 +38,9 @@ USAGE
 ```
 <!-- usagestop -->
 
-## Getting Started
+# Examples
 
-```sh
-$ npm install -g dockerized
-```
-
-```sh
-$ dockerized init
-created .dockerized/docker-compose.dockerized.yml
-created .dockerized/Dockerfile.dockerized
-
-$ cat .dockerized/Dockerfile.dockerized
-FROM busybox
-# install your build dependencies here
-
-$ dockerized exec build-my-project
-```
-
-## Examples
-
-See the `examples/` folder.
+See the `src/examples/` folder.
 
 # Commands
 <!-- commands -->
@@ -167,9 +152,9 @@ USAGE
 _See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/shell.ts)_
 <!-- commandsstop -->
 
-## Advanced Usage
+# Advanced Usage
 
-### Environment variables
+## Environment variables
 
 The environment variables available to the dockerized command consists of:
 
@@ -177,7 +162,7 @@ The environment variables available to the dockerized command consists of:
 - Environment variables defined in `.dockerized/docker-compose.dockerized.yml`
 - Environment variables passed to the `exec` command: `dockerized exec FOO=1 BAR=2 COMMAND`
 
-### My project uses Yarn - how do I utilize its cache?
+## My project uses Yarn - how do I utilize its cache?
 
 ```sh
 $ dockerized init --withYarnCache
