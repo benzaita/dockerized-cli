@@ -1,11 +1,11 @@
 {
-  "name": "dockerized",
+  "name": "dockerized-cli",
   "version": "0.3.0",
   "author": "ItamarB @benzaita",
   "bin": {
     "dockerized": "./bin/run"
   },
-  "bugs": "https://github.com/benzaita/dockerized/issues",
+  "bugs": "https://github.com/benzaita/dockerized-cli/issues",
   "dependencies": {
     "@oclif/command": "^1.5.15",
     "@oclif/config": "^1.13.0",
@@ -58,14 +58,14 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/benzaita/dockerized",
+  "homepage": "https://github.com/benzaita/dockerized-cli",
   "keywords": [
     "oclif"
   ],
   "lint-staged": {
     "*.js": [
-      "yarn format",
-      "yarn lint",
+      "npm run format",
+      "npm run lint",
       "git add"
     ]
   },
@@ -78,7 +78,7 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "benzaita/dockerized",
+  "repository": "benzaita/dockerized-cli",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
