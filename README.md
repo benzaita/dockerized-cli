@@ -28,18 +28,23 @@ Then run `dockerized exec COMMAND` to build the container, start the dependencie
 * [Usage](#Usage)
 * [Examples](#Examples)
 <!-- toc -->
+* [Getting Started](#getting-started)
+* [Contents:](#contents)
+* [Usage](#usage)
+* [Examples](#examples)
 * [Commands](#commands)
+* [Advanced Usage](#advanced-usage)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
 ```sh-session
-$ npm install -g dockerized
+$ npm install -g dockerized-cli
 $ dockerized COMMAND
 running command...
 $ dockerized (-v|--version|version)
-dockerized/0.3.0 darwin-x64 node-v8.15.1
+dockerized-cli/0.4.0 darwin-x64 node-v11.6.0
 $ dockerized --help [COMMAND]
 USAGE
   $ dockerized COMMAND
@@ -55,7 +60,7 @@ See the `src/examples/` folder.
 <!-- commands -->
 * [`dockerized clean`](#dockerized-clean)
 * [`dockerized compose`](#dockerized-compose)
-* [`dockerized $ dockerized exec COMMAND`](#dockerized--dockerized-exec-command)
+* [`dockerized exec [NAME=VALUE ...] COMMAND`](#dockerized-exec-namevalue--command)
 * [`dockerized help [COMMAND]`](#dockerized-help-command)
 * [`dockerized init`](#dockerized-init)
 * [`dockerized shell`](#dockerized-shell)
@@ -72,7 +77,7 @@ EXAMPLE
   $ dockerized clean
 ```
 
-_See code: [src/commands/clean.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/clean.ts)_
+_See code: [src/commands/clean.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.0/src/commands/clean.ts)_
 
 ## `dockerized compose`
 
@@ -87,15 +92,15 @@ EXAMPLES
   ...
 ```
 
-_See code: [src/commands/compose.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/compose.ts)_
+_See code: [src/commands/compose.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.0/src/commands/compose.ts)_
 
-## `dockerized $ dockerized exec COMMAND`
+## `dockerized exec [NAME=VALUE ...] COMMAND`
 
 execute a command inside the dockerized environment
 
 ```
 USAGE
-  $ dockerized $ dockerized exec COMMAND
+  $ dockerized exec [NAME=VALUE ...] COMMAND
 
 DESCRIPTION
   Environment variables:
@@ -110,7 +115,7 @@ EXAMPLES
   $ dockerized exec mvn
 ```
 
-_See code: [src/commands/exec.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/exec.ts)_
+_See code: [src/commands/exec.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.0/src/commands/exec.ts)_
 
 ## `dockerized help [COMMAND]`
 
@@ -140,14 +145,15 @@ USAGE
 OPTIONS
   -C, --composeFile=composeFile  [default: .dockerized/docker-compose.dockerized.yml] Docker-Compose file to create
   -D, --dockerFile=dockerFile    [default: .dockerized/Dockerfile.dockerized] Dockerfile to create
-  -d, --[no-]withNestedDocker    Includes support for running Docker inside Docker
-  -y, --[no-]withYarnCache       Includes support for utilizing yarn cache
+  --withGoCache                  Includes a volume for GOPATH
+  --[no-]withNestedDocker        Includes support for running Docker inside Docker
+  --withYarnCache                Includes support for utilizing yarn cache
 
 EXAMPLE
   $ dockerized init
 ```
 
-_See code: [src/commands/init.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.0/src/commands/init.ts)_
 
 ## `dockerized shell`
 
@@ -158,7 +164,7 @@ USAGE
   $ dockerized shell
 ```
 
-_See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized/blob/v0.3.0/src/commands/shell.ts)_
+_See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.0/src/commands/shell.ts)_
 <!-- commandsstop -->
 
 # Advanced Usage
