@@ -19,17 +19,20 @@ Your build dependencies are part of your project!
 
 # Getting Started
 
+Install _dockerized_:
+
+```
+npm install -g dockerized-cli
+```
+
 Run `dockerized init` to set up. It will create a Dockerfile and a Docker Compose file for you. You can tweak those to set up your build dependencies.
 
 Then run `dockerized exec COMMAND` to build the container, start the dependencies, and execute `COMMAND` inside a container.
 
-# Contents:
+Contents:
 
-* [Usage](#Usage)
-* [Examples](#Examples)
 <!-- toc -->
 * [Getting Started](#getting-started)
-* [Contents:](#contents)
 * [Usage](#usage)
 * [Examples](#examples)
 * [Commands](#commands)
