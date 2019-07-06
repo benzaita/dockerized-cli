@@ -6,15 +6,24 @@ dockerized 🏗❤️
 [![Downloads/week](https://img.shields.io/npm/dw/dockerized-cli.svg)](https://npmjs.org/package/dockerized-cli)
 [![License](https://img.shields.io/npm/l/dockerized-cli.svg)](https://github.com/benzaita/dockerized-cli/blob/master/package.json)
 
-`dockerized` helps you express your build dependencies in code, and seamlessly use them - just append `dockerized exec`!
+`dockerized` is a tool for seamlessly executing commands in a container. It takes care of the details so you can run a command in a container as if it was running on your machine - just prepend any command with `dockerized exec` to have it run in the container.
+
+This is especially useful for building things. For example, if your project needs Java and Maven to build, you can put these build dependencies in a Dockerfile and then just replace `mvn` with `dockerized exec mvn`. If your tests need a Postgresql database to run, add that in a Docker Compose file and just run `dockerized exec mvn test`.
+
+That approach encourages versioning the build dependencies _alongside_ the application code.
 
 * Never again an outdated README file with all the tools you need to install to build your project.
-
 * Never again your build dependencies managed in another repo which falls out of sync with your code.
 
-Your build dependencies are part of your project.
+Your build dependencies are part of your project!
 
-Contents:
+# Getting Started
+
+Run `dockerized init` to set up. It will create a Dockerfile and a Docker Compose file for you. You can tweak those to set up your build dependencies.
+
+Then run `dockerized exec COMMAND` to build the container, start the dependencies, and execute `COMMAND` inside a container.
+
+# Contents:
 
 * [Usage](#Usage)
 * [Examples](#Examples)
