@@ -6,7 +6,7 @@ import runDockerCompose from '../utils/run-docker-compose';
 
 const readConfig = createReadConfig();
 
-function execDockerComposeCommand(command, baseDir, dockerComposeFile) {
+function execDockerComposeCommand(command: string[], baseDir: string, dockerComposeFile: string) {
     return runDockerCompose({
         rejectOnNonZeroExitCode: false,
         baseDir,

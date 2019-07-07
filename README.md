@@ -47,7 +47,7 @@ $ npm install -g dockerized-cli
 $ dockerized COMMAND
 running command...
 $ dockerized (-v|--version|version)
-dockerized-cli/0.4.0 darwin-x64 node-v11.6.0
+dockerized-cli/0.4.0 darwin-x64 node-v8.15.1
 $ dockerized --help [COMMAND]
 USAGE
   $ dockerized COMMAND
@@ -146,11 +146,11 @@ USAGE
   $ dockerized init
 
 OPTIONS
-  -C, --composeFile=composeFile  [default: .dockerized/docker-compose.dockerized.yml] Docker-Compose file to create
-  -D, --dockerFile=dockerFile    [default: .dockerized/Dockerfile.dockerized] Dockerfile to create
-  --withGoCache                  Includes a volume for GOPATH
-  --[no-]withNestedDocker        Includes support for running Docker inside Docker
-  --withYarnCache                Includes support for utilizing yarn cache
+  --composeFile=composeFile  [default: .dockerized/docker-compose.dockerized.yml] Docker-Compose file to create
+  --dockerFile=dockerFile    [default: .dockerized/Dockerfile.dockerized] Dockerfile to create
+  --withGoCache              Includes a volume for GOPATH
+  --[no-]withNestedDocker    Includes support for running Docker inside Docker
+  --withYarnCache            Includes support for utilizing yarn cache
 
 EXAMPLE
   $ dockerized init

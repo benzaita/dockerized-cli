@@ -11,9 +11,9 @@ const debug = createDebug('dockerized:exec');
 export interface CreateExecInput {
     config: Config;
     baseDir: string;
-    runInContainer: typeof _runInContainer;
-    runDockerCompose: typeof _runDockerCompose;
-    writeConfig: typeof _writeConfig;
+    runInContainer?: typeof _runInContainer;
+    runDockerCompose?: typeof _runDockerCompose;
+    writeConfig?: typeof _writeConfig;
 }
 
 export default function createExec({

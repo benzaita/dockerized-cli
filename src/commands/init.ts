@@ -13,8 +13,8 @@ const composeConfig = {
                 dockerfile: '',
             },
             entrypoint: ['sh', '-c'],
-            environment: [],
-            volumes: [],
+            environment: [] as string[],
+            volumes: [] as string[],
             // eslint-disable-next-line @typescript-eslint/camelcase
             network_mode: '',
         },
@@ -34,12 +34,10 @@ export default class Init extends Command {
 
     public static flags = {
         composeFile: flags.string({
-            char: 'C',
             description: 'Docker-Compose file to create',
             default: '.dockerized/docker-compose.dockerized.yml',
         }),
         dockerFile: flags.string({
-            char: 'D',
             description: 'Dockerfile to create',
             default: '.dockerized/Dockerfile.dockerized',
         }),
@@ -70,13 +68,13 @@ export default class Init extends Command {
                 throw new Error('already initialized');
             }
 
-            if (fs.existsSync(flags.composeFile)) {
+            if (flags.composeFile === undefined || fs.existsSync(flags.composeFile)) {
                 throw new Error(
                     `will not overwrite ${flags.composeFile}. Use --composeFile to choose a different name`,
                 );
             }
 
-            if (fs.existsSync(flags.dockerFile)) {
+            if (flags.dockerFile === undefined || fs.existsSync(flags.dockerFile)) {
                 throw new Error(`will not overwrite ${flags.dockerFile}. Use --dockerFile to choose a different name`);
             }
 
@@ -91,12 +89,14 @@ export default class Init extends Command {
             if (flags.withYarnCache) {
                 composeConfig.services.dockerized.volumes.push('yarn-cache:/data/yarn-cache');
                 composeConfig.services.dockerized.environment.push('YARN_CACHE_FOLDER=/data/yarn-cache');
+                // @ts-ignore
                 composeConfig.volumes['yarn-cache'] = {};
             }
 
             if (flags.withGoCache) {
                 composeConfig.services.dockerized.volumes.push('go-cache:/go');
                 composeConfig.services.dockerized.environment.push('GOPATH=/go');
+                // @ts-ignore
                 composeConfig.volumes['go-cache'] = {};
             }
 
@@ -106,7 +106,7 @@ export default class Init extends Command {
                 composeConfig.services.dockerized.network_mode = 'host';
             }
 
-            fs.writeFileSync(config.composeFile, yaml.safeDump(composeConfig));
+            fs.writeFileSync(config.composeFile as string, yaml.safeDump(composeConfig));
 
             fs.writeFileSync(flags.dockerFile, dockerConfig);
 
