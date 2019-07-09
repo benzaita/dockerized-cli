@@ -51,8 +51,7 @@ export default class Init extends Command {
         }),
         withNestedDocker: flags.boolean({
             description: 'Includes support for running Docker inside Docker',
-            default: true,
-            allowNo: true,
+            default: false,
         }),
     };
 
