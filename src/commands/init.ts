@@ -16,7 +16,7 @@ const composeConfig = {
             environment: [] as string[],
             volumes: [] as string[],
             // eslint-disable-next-line @typescript-eslint/camelcase
-            network_mode: '',
+            network_mode: undefined as string | undefined,
         },
     },
     volumes: {},
