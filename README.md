@@ -67,7 +67,7 @@ $ npm install -g dockerized-cli
 $ dockerized COMMAND
 running command...
 $ dockerized (-v|--version|version)
-dockerized-cli/0.4.2 darwin-x64 node-v8.15.1
+dockerized-cli/0.4.3 darwin-x64 node-v11.6.0
 $ dockerized --help [COMMAND]
 USAGE
   $ dockerized COMMAND
@@ -100,7 +100,7 @@ EXAMPLE
   $ dockerized clean
 ```
 
-_See code: [src/commands/clean.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.2/src/commands/clean.ts)_
+_See code: [src/commands/clean.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.3/src/commands/clean.ts)_
 
 ## `dockerized compose`
 
@@ -115,7 +115,7 @@ EXAMPLES
   ...
 ```
 
-_See code: [src/commands/compose.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.2/src/commands/compose.ts)_
+_See code: [src/commands/compose.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.3/src/commands/compose.ts)_
 
 ## `dockerized exec [NAME=VALUE ...] COMMAND`
 
@@ -138,7 +138,7 @@ EXAMPLES
   $ dockerized exec mvn
 ```
 
-_See code: [src/commands/exec.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.2/src/commands/exec.ts)_
+_See code: [src/commands/exec.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.3/src/commands/exec.ts)_
 
 ## `dockerized help [COMMAND]`
 
@@ -176,7 +176,7 @@ EXAMPLE
   $ dockerized init
 ```
 
-_See code: [src/commands/init.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.2/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.3/src/commands/init.ts)_
 
 ## `dockerized shell`
 
@@ -187,7 +187,7 @@ USAGE
   $ dockerized shell
 ```
 
-_See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.2/src/commands/shell.ts)_
+_See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.3/src/commands/shell.ts)_
 <!-- commandsstop -->
 
 # Advanced Usage
