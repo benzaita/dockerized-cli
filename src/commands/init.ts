@@ -15,8 +15,6 @@ const composeConfig = {
             entrypoint: ['sh', '-c'],
             environment: [] as string[],
             volumes: [] as string[],
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            network_mode: undefined as string | undefined,
         },
     },
     volumes: {},
@@ -101,7 +99,7 @@ export default class Init extends Command {
 
             if (flags.withNestedDocker) {
                 composeConfig.services.dockerized.volumes.push('/var/run/docker.sock:/var/run/docker.sock');
-                // eslint-disable-next-line @typescript-eslint/camelcase
+                // @ts-ignore
                 composeConfig.services.dockerized.network_mode = 'host';
             }
 

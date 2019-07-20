@@ -8,8 +8,6 @@ services:
       - sh
       - '-c'
     environment: []
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'
     depends_on:
       - redis
     links:

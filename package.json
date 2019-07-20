@@ -10,12 +10,12 @@
     "@oclif/command": "^1.5.15",
     "@oclif/config": "^1.13.0",
     "@oclif/plugin-help": "^2.2.0",
-    "tslib": "^1.10.0",
     "debug": "^3.1.0",
     "dnif": "^0.2.0",
     "js-yaml": "^3.13.1",
     "md5": "^2.2.1",
-    "ramda": "^0.25.0"
+    "ramda": "^0.25.0",
+    "tslib": "^1.10.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.0",
@@ -23,6 +23,7 @@
     "@typescript-eslint/eslint-plugin": "^1.11.0",
     "@typescript-eslint/parser": "^1.11.0",
     "babel-jest": "^24.8.0",
+    "deltree": "^1.0.4",
     "eslint-plugin-prettier": "^3.1.0",
     "@types/debug": "^4.1.4",
     "@types/jest": "^24.0.15",

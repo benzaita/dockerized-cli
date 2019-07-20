@@ -1,10 +1,13 @@
 import { execSync } from 'child_process'
 import { join, normalize, dirname } from 'path'
-import { EOL } from 'os'
 
 const dockerizedBin = './bin/run'
 
-export default function stdoutOfDockerized(command: string): string {
+interface Options {
+  cwd?: string
+}
+
+export default function stdoutOfDockerized(command: string, options: Options = {}): string {
   if (module.parent === null) {
     throw new Error()
   }
@@ -15,7 +18,7 @@ export default function stdoutOfDockerized(command: string): string {
   return String(execSync(
     `${dockerizedBinAbsolutePath} ${command}`,
     {
-      cwd: parentModulePath
+      cwd: options.cwd || parentModulePath
     }
   ))
 }
