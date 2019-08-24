@@ -21,7 +21,11 @@ describe('when not initialized yet', () => {
         expect(stderr.split(EOL)).toEqual([
             'created .dockerized/docker-compose.dockerized.yml',
             'created .dockerized/Dockerfile.dockerized',
-            'hint: edit .dockerized/Dockerfile.dockerized to set up your container',    
+            '',
+            'run the following to set up your container',
+            '',
+            '    dockerized edit                     # to edit the Dockerfile',
+            '    dockerized edit --file=composefile  # to edit the Docker Compose file',
             ''
         ])
     })

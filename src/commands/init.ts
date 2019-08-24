@@ -109,7 +109,11 @@ export default class Init extends Command {
 
             console.error(`created ${flags.composeFile}`);
             console.error(`created ${flags.dockerFile}`);
-            console.error(`hint: edit ${flags.dockerFile} to set up your container`);
+            console.error('');
+            console.error(`run the following to set up your container`);
+            console.error('');
+            console.error('    dockerized edit                     # to edit the Dockerfile');
+            console.error('    dockerized edit --file=composefile  # to edit the Docker Compose file');
         })();
     }
 }

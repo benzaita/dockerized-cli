@@ -5,6 +5,7 @@ const dockerizedBin = './bin/run'
 
 interface Options {
   cwd?: string
+  env?: NodeJS.ProcessEnv
 }
 
 interface Output {
@@ -29,7 +30,8 @@ export default function execDockerizedSync(
     dockerizedBinAbsolutePath,
     [command, ...args],
     {
-      cwd: options.cwd || parentModulePath
+      cwd: options.cwd || parentModulePath,
+      env: Object.assign({}, process.env, options.env)
     }
   )
 
