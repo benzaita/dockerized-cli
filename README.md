@@ -67,7 +67,7 @@ $ npm install -g dockerized-cli
 $ dockerized COMMAND
 running command...
 $ dockerized (-v|--version|version)
-dockerized-cli/0.4.4 darwin-x64 node-v11.6.0
+dockerized-cli/0.5.0 darwin-x64 node-v11.6.0
 $ dockerized --help [COMMAND]
 USAGE
   $ dockerized COMMAND
@@ -83,6 +83,7 @@ See the `src/examples/` folder.
 <!-- commands -->
 * [`dockerized clean`](#dockerized-clean)
 * [`dockerized compose`](#dockerized-compose)
+* [`dockerized edit`](#dockerized-edit)
 * [`dockerized exec [NAME=VALUE ...] COMMAND`](#dockerized-exec-namevalue--command)
 * [`dockerized help [COMMAND]`](#dockerized-help-command)
 * [`dockerized init`](#dockerized-init)
@@ -100,7 +101,7 @@ EXAMPLE
   $ dockerized clean
 ```
 
-_See code: [src/commands/clean.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.4/src/commands/clean.ts)_
+_See code: [src/commands/clean.ts](https://github.com/benzaita/dockerized-cli/blob/v0.5.0/src/commands/clean.ts)_
 
 ## `dockerized compose`
 
@@ -115,7 +116,21 @@ EXAMPLES
   ...
 ```
 
-_See code: [src/commands/compose.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.4/src/commands/compose.ts)_
+_See code: [src/commands/compose.ts](https://github.com/benzaita/dockerized-cli/blob/v0.5.0/src/commands/compose.ts)_
+
+## `dockerized edit`
+
+edit the Dockerfile or Docker Compose file
+
+```
+USAGE
+  $ dockerized edit
+
+OPTIONS
+  --file=dockerfile|composefile  [default: dockerfile] file to edit
+```
+
+_See code: [src/commands/edit.ts](https://github.com/benzaita/dockerized-cli/blob/v0.5.0/src/commands/edit.ts)_
 
 ## `dockerized exec [NAME=VALUE ...] COMMAND`
 
@@ -138,7 +153,7 @@ EXAMPLES
   $ dockerized exec mvn
 ```
 
-_See code: [src/commands/exec.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.4/src/commands/exec.ts)_
+_See code: [src/commands/exec.ts](https://github.com/benzaita/dockerized-cli/blob/v0.5.0/src/commands/exec.ts)_
 
 ## `dockerized help [COMMAND]`
 
@@ -176,7 +191,7 @@ EXAMPLE
   $ dockerized init
 ```
 
-_See code: [src/commands/init.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.4/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/benzaita/dockerized-cli/blob/v0.5.0/src/commands/init.ts)_
 
 ## `dockerized shell`
 
@@ -187,7 +202,7 @@ USAGE
   $ dockerized shell
 ```
 
-_See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized-cli/blob/v0.4.4/src/commands/shell.ts)_
+_See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized-cli/blob/v0.5.0/src/commands/shell.ts)_
 <!-- commandsstop -->
 
 # Advanced Usage
