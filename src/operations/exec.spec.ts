@@ -5,6 +5,7 @@ import { Config } from '../utils/read-config';
 
 const defaultConfig: Config = {
     composeFile: '',
+    dockerFile: '',
     composeFileFingerprint: '',
     dockerFileFingerprint: '',
     fingerprint: '',
