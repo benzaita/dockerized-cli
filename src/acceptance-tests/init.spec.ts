@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import execDockerizedSync from "../utils/exec-dockerized-sync";
 import deltree from "deltree"
 import { EOL } from 'os';
+import { join } from 'path';
 
 let workdir: string
 
@@ -14,7 +15,7 @@ afterEach(async () => {
 })
 
 describe('when not initialized yet', () => {
-    it('should initialize', () => {
+    it('should return expected output', () => {
         const { stdout, stderr, status } = execDockerizedSync('init', [], { cwd: workdir })
         expect(status).toBe(0)
         expect(stdout).toEqual('')
@@ -28,6 +29,12 @@ describe('when not initialized yet', () => {
             '    dockerized edit --file=composefile  # to edit the Docker Compose file',
             ''
         ])
+    })
+
+    it('should create a README file', () => {
+        execDockerizedSync('init', [], { cwd: workdir })
+        const readmeFilePath = join(workdir, '.dockerized', 'README.md')
+        expect(fs.existsSync(readmeFilePath)).toBeTruthy()
     })
 })
 

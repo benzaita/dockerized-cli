@@ -4,6 +4,18 @@ import * as path from 'path';
 import * as yaml from 'js-yaml';
 import prettifyErrors from '../utils/prettify-errors';
 
+const README_CONTENT = `
+# The .dockerized Directory
+
+## What is this directory?
+This directory is maintained by [dockerized](https://github.com/benzaita/dockerized-cli).
+
+## Should I commit this to source-control?
+Yes!
+
+For more information see [this page](https://github.com/benzaita/dockerized-cli/wiki/The-%60.dockerized%60-Directory)
+`
+
 const composeConfig = {
     version: '2',
     services: {
@@ -106,6 +118,8 @@ export default class Init extends Command {
             fs.writeFileSync(config.composeFile as string, yaml.safeDump(composeConfig));
 
             fs.writeFileSync(flags.dockerFile, dockerConfig);
+
+            fs.writeFileSync('.dockerized/README.md', README_CONTENT);
 
             console.error(`created ${flags.composeFile}`);
             console.error(`created ${flags.dockerFile}`);
