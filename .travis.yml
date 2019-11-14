@@ -5,7 +5,7 @@ services:
 script:
   - npm ci
   - npm test
-  - npm run build:standalone
+  - npm run package:standalone
 deploy:
   - provider: releases
     api_key:

@@ -82,7 +82,7 @@
   },
   "repository": "benzaita/dockerized-cli",
   "scripts": {
-    "build:standalone": "npx pkg -t node10-osx-x64,node10-linux-x64 --out-path build/ .",
+    "package:standalone": "npm run prepack && pkg -t node10-osx-x64,node10-linux-x64 --out-path build/ . && npm run postpack",
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "version": "oclif-dev readme && git add README.md",
