@@ -67,7 +67,7 @@ $ npm install -g dockerized-cli
 $ dockerized COMMAND
 running command...
 $ dockerized (-v|--version|version)
-dockerized-cli/0.6.1 darwin-x64 node-v11.6.0
+dockerized-cli/0.7.0 darwin-x64 node-v8.15.1
 $ dockerized --help [COMMAND]
 USAGE
   $ dockerized COMMAND
@@ -101,7 +101,7 @@ EXAMPLE
   $ dockerized clean
 ```
 
-_See code: [src/commands/clean.ts](https://github.com/benzaita/dockerized-cli/blob/v0.6.1/src/commands/clean.ts)_
+_See code: [src/commands/clean.ts](https://github.com/benzaita/dockerized-cli/blob/v0.7.0/src/commands/clean.ts)_
 
 ## `dockerized compose`
 
@@ -116,7 +116,7 @@ EXAMPLES
   ...
 ```
 
-_See code: [src/commands/compose.ts](https://github.com/benzaita/dockerized-cli/blob/v0.6.1/src/commands/compose.ts)_
+_See code: [src/commands/compose.ts](https://github.com/benzaita/dockerized-cli/blob/v0.7.0/src/commands/compose.ts)_
 
 ## `dockerized edit`
 
@@ -130,7 +130,7 @@ OPTIONS
   --file=dockerfile|composefile  [default: dockerfile] file to edit
 ```
 
-_See code: [src/commands/edit.ts](https://github.com/benzaita/dockerized-cli/blob/v0.6.1/src/commands/edit.ts)_
+_See code: [src/commands/edit.ts](https://github.com/benzaita/dockerized-cli/blob/v0.7.0/src/commands/edit.ts)_
 
 ## `dockerized exec [NAME=VALUE ...] COMMAND`
 
@@ -153,7 +153,7 @@ EXAMPLES
   $ dockerized exec mvn
 ```
 
-_See code: [src/commands/exec.ts](https://github.com/benzaita/dockerized-cli/blob/v0.6.1/src/commands/exec.ts)_
+_See code: [src/commands/exec.ts](https://github.com/benzaita/dockerized-cli/blob/v0.7.0/src/commands/exec.ts)_
 
 ## `dockerized help [COMMAND]`
 
@@ -191,7 +191,7 @@ EXAMPLE
   $ dockerized init
 ```
 
-_See code: [src/commands/init.ts](https://github.com/benzaita/dockerized-cli/blob/v0.6.1/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/benzaita/dockerized-cli/blob/v0.7.0/src/commands/init.ts)_
 
 ## `dockerized shell`
 
@@ -202,7 +202,7 @@ USAGE
   $ dockerized shell
 ```
 
-_See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized-cli/blob/v0.6.1/src/commands/shell.ts)_
+_See code: [src/commands/shell.ts](https://github.com/benzaita/dockerized-cli/blob/v0.7.0/src/commands/shell.ts)_
 <!-- commandsstop -->
 
 # Advanced Usage
