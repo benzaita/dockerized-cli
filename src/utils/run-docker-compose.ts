@@ -18,7 +18,11 @@ export default function runDockerCompose({
     dockerComposeArgs,
     rejectOnNonZeroExitCode,
 }: RunDockerComposeInput): Promise<Completion> {
-    const args = ['-f', path.resolve(baseDir, dockerComposeFile), ...dockerComposeArgs];
+    const args = [
+        '-f', path.resolve(baseDir, dockerComposeFile),
+        '--project-name', baseDir,
+        ...dockerComposeArgs
+    ];
 
     debug(`running: docker-compose ${args.join(' ')}`);
     return new Promise((resolve, reject) => {
