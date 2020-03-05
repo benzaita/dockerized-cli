@@ -20,6 +20,32 @@ it('does not fail when composeFile is undefined', () => {
     expect(() => readConfig('base-dir')).not.toThrow();
 });
 
+it('sets cacheImage', () => {
+    // given
+    const readConfig = createReadConfig({
+        'base-dir/.dockerized/config.json': JSON.stringify({
+            composeFile: '.dockerized/compose-file.yml',
+        }),
+        'base-dir/.dockerized/compose-file.yml': jsonToYaml({
+            services: {
+                dockerized: {
+                    image: 'cache-image:tag',
+                    build: {
+                        dockerfile: 'Dockerfile'
+                    }
+                }
+            },
+        }),
+        'base-dir/.dockerized/Dockerfile': 'docker-file-content',
+    });
+
+    // when
+    const config = readConfig('base-dir');
+
+    // then
+    expect(config.cacheImage).toEqual('cache-image:tag');
+})
+
 it('sets composeFileFingerprint to the fingerprint of the content of the docker-compose file', () => {
     // given
     const configFileContent = JSON.stringify({

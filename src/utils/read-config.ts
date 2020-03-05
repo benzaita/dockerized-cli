@@ -21,6 +21,7 @@ export interface Config {
     fingerprint: string;
     composeFile: string;
     dockerFile: string;
+    cacheImage: string;
 }
 
 export default function createReadConfig(deps: CreateReadConfigInput = DEFAULT_READ_CONFIG_DEPS) {
@@ -39,8 +40,10 @@ export default function createReadConfig(deps: CreateReadConfigInput = DEFAULT_R
 
             const composeFileJson = yaml.safeLoad(String(composeFileString));
             const dockerFilePath = R.path<string>(['services', 'dockerized', 'build', 'dockerfile'], composeFileJson);
+            const cacheImage = R.path<string>(['services', 'dockerized', 'image'], composeFileJson);
 
             config.dockerFile = dockerFilePath
+            config.cacheImage = cacheImage
 
             const dockerFileString =
                 dockerFilePath === undefined

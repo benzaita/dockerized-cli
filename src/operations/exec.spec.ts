@@ -1,7 +1,7 @@
-import createExec, { CreateExecInput } from './exec';
+import createExec, {CreateExecInput} from './exec';
 import fingerprint from '../utils/fingerprint-config';
 import Completion from '../utils/completion';
-import { Config } from '../utils/read-config';
+import {Config} from '../utils/read-config';
 
 const defaultConfig: Config = {
     composeFile: '',
@@ -9,6 +9,7 @@ const defaultConfig: Config = {
     composeFileFingerprint: '',
     dockerFileFingerprint: '',
     fingerprint: '',
+    cacheImage: '',
 };
 
 const withOutdatedFingerprint = (config: Config): Config =>
@@ -21,6 +22,27 @@ const withUpToDateFingerprint = (config: Config): Config =>
         fingerprint: fingerprint(config),
     });
 
+const withCacheImage = (config: Config, cacheImage: string): Config =>
+    ({
+        ...config,
+        cacheImage
+    });
+
+const withEnv = (overrides: typeof process.env, fn: Function): void => {
+    let oldEnv: typeof process.env;
+
+    beforeEach(() => {
+        oldEnv = process.env
+        process.env = { ...process.env, ...overrides }
+    })
+
+    afterEach(() => {
+        process.env = oldEnv
+    })
+
+    fn()
+}
+
 const createExecWithDefaults = (overrides: Partial<CreateExecInput>) => {
     const defaultOpts = {
         config: {},
@@ -28,6 +50,7 @@ const createExecWithDefaults = (overrides: Partial<CreateExecInput>) => {
         writeConfig: () => {},
         runDockerCompose: () => Promise.resolve(Completion.of(0)),
         runInContainer: () => Promise.resolve(Completion.of(0)),
+        dockerClient: { imageExistsLocally: () => Promise.resolve(false) }
     };
 
     return createExec(Object.assign({}, defaultOpts, overrides));
@@ -48,7 +71,7 @@ describe('when config.fingerprint is outdated', () => {
 
         // then
         // @ts-ignore
-        expect(runDockerCompose.mock.calls[0][0]).toEqual(
+        expect(runDockerCompose).toHaveBeenNthCalledWith(1,
             expect.objectContaining({
                 dockerComposeArgs: ['build'],
             }),
@@ -70,7 +93,9 @@ describe('when config.fingerprint is up to date', () => {
         await exec('COMMAND');
 
         // then
-        expect(runDockerCompose).not.toHaveBeenCalled();
+        expect(runDockerCompose).not.toHaveBeenCalledWith(expect.objectContaining({
+            dockerComposeArgs: ['build']
+        }));
     });
 });
 
@@ -111,3 +136,111 @@ it('returns a Promise that resolves with a completion object', async () => {
         }),
     );
 });
+
+describe('when cache image is specified', () => {
+    describe('when image _is not_ available locally', () => {
+        it('tries to pull', async () => {
+            const runDockerCompose = jest.fn(() => Promise.resolve(Completion.of(0)));
+            const dockerClient = {
+                imageExistsLocally: jest.fn()
+            };
+            const exec = createExecWithDefaults({
+                config: withCacheImage(defaultConfig, 'image:tag'),
+                runDockerCompose,
+                dockerClient
+            });
+
+            dockerClient.imageExistsLocally.mockResolvedValue(false);
+            await exec('COMMAND');
+
+            expect(runDockerCompose).toHaveBeenNthCalledWith(1, expect.objectContaining({
+                dockerComposeArgs: ['pull', 'dockerized'],
+                rejectOnNonZeroExitCode: false
+            }))
+        })
+    })
+
+    describe('when image _is_ available locally', () => {
+        it('does not pull', async () => {
+            const runDockerCompose = jest.fn(() => Promise.resolve(Completion.of(0)));
+            const dockerClient = {
+                imageExistsLocally: jest.fn()
+            };
+            const exec = createExecWithDefaults({
+                config: withCacheImage(defaultConfig, 'image:tag'),
+                dockerClient,
+                runDockerCompose
+            });
+
+            dockerClient.imageExistsLocally.mockResolvedValue(true);
+            await exec('COMMAND');
+
+            expect(runDockerCompose).not.toHaveBeenCalledWith(expect.objectContaining({
+                dockerComposeArgs: ['pull'],
+                rejectOnNonZeroExitCode: false
+            }))
+        })
+    })
+
+    describe('when local image was updated', () => {
+        withEnv({ CI: '' }, () => {
+            it('tries to push', async () => {
+                const configToForceBuild = withOutdatedFingerprint(defaultConfig); // force build
+                const config = withCacheImage(configToForceBuild, 'image:tag')
+                const runDockerCompose = jest.fn(() => Promise.resolve(Completion.of(0)));
+
+                const exec = createExecWithDefaults({
+                    config,
+                    runDockerCompose
+                })
+
+                await exec('COMMAND')
+
+                expect(runDockerCompose).toHaveBeenCalledWith(expect.objectContaining({
+                    dockerComposeArgs: ['push', 'dockerized'],
+                    rejectOnNonZeroExitCode: false
+                }))
+            })
+        })
+    })
+
+    describe('when local image was updated, but CI=true', () => {
+        withEnv({ CI: 'true' }, () => {
+            it('does not push', async () => {
+                const configToForceBuild = withOutdatedFingerprint(defaultConfig); // force build
+                const config = withCacheImage(configToForceBuild, 'image:tag')
+                const runDockerCompose = jest.fn(() => Promise.resolve(Completion.of(0)));
+
+                const exec = createExecWithDefaults({
+                    config,
+                    runDockerCompose
+                })
+
+                await exec('COMMAND')
+
+                expect(runDockerCompose).not.toHaveBeenCalledWith(expect.objectContaining({
+                    dockerComposeArgs: ['push'],
+                }))
+            })
+        })
+    })
+
+    describe('when local image was _not_ updated', () => {
+        it('does not push', async () => {
+            const config = withUpToDateFingerprint(withCacheImage(defaultConfig, 'image:tag'))
+            const runDockerCompose = jest.fn(() => Promise.resolve(Completion.of(0)));
+
+            const exec = createExecWithDefaults({
+                config,
+                runDockerCompose
+            })
+
+            await exec('COMMAND')
+
+            expect(runDockerCompose).not.toHaveBeenCalledWith(expect.objectContaining({
+                dockerComposeArgs: ['push', 'dockerized'],
+            }))
+        })
+    })
+})
+

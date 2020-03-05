@@ -28,7 +28,8 @@ function createConfig(partial: Partial<Config>): Config {
             dockerFileFingerprint: 'dockerFileFingerprint',
             composeFileFingerprint: 'composeFileFingerprint',
             fingerprint: 'fingerprint',
-            composeFile: 'composeFile'
+            composeFile: 'composeFile',
+            cacheImage: 'cacheImage'
         },
         partial
     );

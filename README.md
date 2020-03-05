@@ -215,6 +215,28 @@ The environment variables available to the dockerized command consists of:
 - Environment variables defined in `.dockerized/docker-compose.dockerized.yml`
 - Environment variables passed to the `exec` command: `dockerized exec FOO=1 BAR=2 COMMAND`
 
+## Caching the image
+
+`dockerized` supports caching of the builder image (the image that contains your build dependencies). If you add `image`
+to the `dockerized` service of the Docker Compose file:
+
+```shell script
+dockerized edit --file=composeFile
+```
+
+```diff
+ services:
+   dockerized:
++    image: remote-image-uri:latest
+     build:
+```
+
+`dockerized` will pull that image and use it. If your Dockerfile results in a different image, it will also push that
+image to update the cache. The result is faster builds!
+
+When running with the `CI` environment variable set to `true` (which is common in CI servers), the cache image is never
+pushed, even if the Dockerfile results in an image different than the cached image.
+
 ## My project uses Yarn - how do I utilize its cache?
 
 ```sh
