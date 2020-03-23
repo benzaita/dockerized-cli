@@ -65,20 +65,6 @@ export default function createExec({
 
             debug(`updating config.fingerprint`);
             writeConfig(baseDir, configWithFingerprint);
-
-            if (config.cacheImage) {
-                if (isCiEnvironmentVariableEnabled(process.env.CI)) {
-                    debug(`not pushing config.cacheImage because CI='${process.env.CI}'`, config.cacheImage);
-                } else {
-                    debug(`image updated. pushing config.cacheImage`, config.cacheImage);
-                    await runDockerCompose({
-                        dockerComposeFile,
-                        baseDir,
-                        dockerComposeArgs: ['push', 'dockerized'],
-                        rejectOnNonZeroExitCode: false
-                    })
-                }
-            }
         }
 
         const completion = await runInContainer({
