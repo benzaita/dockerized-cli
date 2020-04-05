@@ -7,7 +7,6 @@ verify_ssl = true
 
 [packages]
 invoke = "*"
-pytest = "*"
 click = "*"
 docker = "*"
 
