@@ -4,7 +4,7 @@ import tempfile
 from pathlib import Path
 from shutil import rmtree
 
-from commands.init import InitCommand, InitError
+from core.commands.init import InitCommand, InitError
 
 
 class TestInitCommand(unittest.TestCase):

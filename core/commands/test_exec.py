@@ -1,5 +1,4 @@
 import io
-import sys
 import unittest
 import tempfile
 from pathlib import Path
@@ -7,7 +6,7 @@ from shutil import rmtree
 from unittest.mock import patch
 
 from clients.docker import DockerClient
-from commands.exec import ExecCommand
+from core.commands.exec import ExecCommand
 
 
 class TestExecCommand(unittest.TestCase):
