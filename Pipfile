@@ -9,6 +9,7 @@ verify_ssl = true
 invoke = "*"
 pytest = "*"
 click = "*"
+docker = "*"
 
 [requires]
 python_version = "3.7"

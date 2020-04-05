@@ -12,7 +12,7 @@ class TestCli(unittest.TestCase):
     temp_dir: str
 
     def setUp(self) -> None:
-        self.runner = CliRunner()
+        self.runner = CliRunner(mix_stderr=False)
         self.temp_dir = tempfile.mkdtemp()
         os.chdir(self.temp_dir)
 
@@ -28,11 +28,19 @@ class TestCli(unittest.TestCase):
         self.runner.invoke(cli, ['init'])
         result = self.runner.invoke(cli, ['init'])
         self.assertEqual(result.exit_code, 1)
-        self.assertEqual(result.output, 'Refusing to overwrite .dockerized\n')
+        self.assertEqual(result.stderr, 'Refusing to overwrite .dockerized\n')
 
     def test_exec_exit_code(self):
-        result = self.runner.invoke(cli, ['exec', 'exit 42'])
+        result = self.runner.invoke(cli, ['exec', 'exit', '42'])
         self.assertEqual(result.exit_code, 42)
+
+    def test_exec_pipes_stdout(self):
+        result = self.runner.invoke(cli, ['exec', 'echo', 'something'])
+        self.assertEqual(result.stdout, 'something')
+
+    def test_exec_pipes_stderr(self):
+        result = self.runner.invoke(cli, ['exec', 'echo', 'something', '>&2'])
+        self.assertEqual(result.stderr, 'something')
 
 if __name__ == '__main__':
     unittest.main()
