@@ -1,4 +1,5 @@
 import io
+import os
 import unittest
 import tempfile
 from pathlib import Path
@@ -28,6 +29,7 @@ class TestExecCommand(unittest.TestCase):
             stdout=self.stdout,
             stderr=self.stderr,
             composefile=self.temp_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml'),
+            working_dir=Path(os.getcwd()),
             bind_dir=self.temp_dir,
             command=['command', 'arg1']
         )

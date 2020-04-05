@@ -1,4 +1,4 @@
-import sys
+import os
 from pathlib import Path
 from typing import List
 
@@ -23,7 +23,7 @@ class ExecCommand:
             stdout=self.stdout,
             stderr=self.stderr,
             composefile=self.project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml'),
-            # working_dir=cwd,
+            working_dir=Path(os.getcwd()),
             bind_dir=self.project_dir,
             command=self.command
         )
