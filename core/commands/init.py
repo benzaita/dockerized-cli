@@ -13,21 +13,21 @@ class InitError(Exception):
 
 
 class InitCommand:
-    work_dir: Path
+    project_dir: Path
 
-    def __init__(self, work_dir):
-        self.work_dir = work_dir
+    def __init__(self, project_dir):
+        self.project_dir = project_dir
 
     def run(self):
         try:
-            self.work_dir.joinpath('.dockerized').mkdir()
+            self.project_dir.joinpath('.dockerized').mkdir()
         except FileExistsError as err:
             raise InitError('Refusing to overwrite .dockerized', err)
 
-        dockerfile_path = self.work_dir.joinpath('.dockerized').joinpath('Dockerfile.dockerized')
+        dockerfile_path = self.project_dir.joinpath('.dockerized').joinpath('Dockerfile.dockerized')
         dockerfile_path.write_text(dockerfile_content)
 
-        composefile_path = self.work_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml')
+        composefile_path = self.project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml')
         composefile_content = """
 version: '2'
 services:

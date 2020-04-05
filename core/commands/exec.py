@@ -1,17 +1,29 @@
+import sys
+from pathlib import Path
 from typing import List
 
-from clients.docker import DockerClient
+from clients.dockercompose import DockerCompose
 
 
 class ExecCommand:
+    project_dir: Path
     stdout: object
+    stderr: object
     command: List[str]
 
-    def __init__(self, work_dir, stdout, stderr, command):
+    def __init__(self, project_dir, stdout, stderr, command):
         self.command = command
         self.stdout = stdout
         self.stderr = stderr
+        self.project_dir = project_dir
 
     def run(self):
-        docker_client = DockerClient()
-        return docker_client.run(self.stdout, self.stderr, self.command)
+        docker_compose = DockerCompose()
+        return docker_compose.run(
+            stdout=self.stdout,
+            stderr=self.stderr,
+            composefile=self.project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml'),
+            # working_dir=cwd,
+            bind_dir=self.project_dir,
+            command=self.command
+        )
