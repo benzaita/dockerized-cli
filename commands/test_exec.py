@@ -25,7 +25,7 @@ class TestExecCommand(unittest.TestCase):
         with patch.object(DockerClient, 'run', return_value=None) as mock_run:
             exec_command = ExecCommand(self.temp_dir, self.stdout, self.stderr, ['command', 'arg1'])
             exec_command.run()
-        mock_run.assert_called_once_with(self.stdout, ['command', 'arg1'])
+        mock_run.assert_called_once_with(self.stdout, self.stderr, ['command', 'arg1'])
 
 
 if __name__ == '__main__':

@@ -35,12 +35,14 @@ class TestCli(unittest.TestCase):
         self.assertEqual(result.exit_code, 42)
 
     def test_exec_pipes_stdout(self):
-        result = self.runner.invoke(cli, ['exec', 'echo', 'something'])
-        self.assertEqual(result.stdout, 'something')
+        result = self.runner.invoke(cli, ['exec', 'echo', 'something out'])
+        self.assertEqual(result.stdout, 'something out')
 
     def test_exec_pipes_stderr(self):
-        result = self.runner.invoke(cli, ['exec', 'echo', 'something', '>&2'])
-        self.assertEqual(result.stderr, 'something')
+        self.runner.isolation()
+        result = self.runner.invoke(cli, args=['exec', 'echo', 'something err', '>&2'], mix_stderr=False)
+        self.assertEqual(result.stderr, 'something err')
+
 
 if __name__ == '__main__':
     unittest.main()

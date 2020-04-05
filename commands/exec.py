@@ -10,8 +10,8 @@ class ExecCommand:
     def __init__(self, work_dir, stdout, stderr, command):
         self.command = command
         self.stdout = stdout
-        pass
+        self.stderr = stderr
 
     def run(self):
         docker_client = DockerClient()
-        return docker_client.run(self.stdout, self.command)
+        return docker_client.run(self.stdout, self.stderr, self.command)
