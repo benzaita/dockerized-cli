@@ -3,6 +3,7 @@
 import click
 from pathlib import Path
 from commands.init import InitCommand, InitError
+from commands.exec import ExecCommand
 
 
 @click.group()
@@ -19,6 +20,14 @@ def init():
         click.echo(err.message, err=True)
         click.get_current_context().exit(1)
     click.echo('created')
+
+
+@cli.command()
+@click.argument('command', nargs=-1)
+def exec(command):
+    exec_command = ExecCommand(Path.cwd(), command)
+    exit_code = exec_command.run()
+    click.get_current_context().exit(exit_code)
 
 
 if __name__ == '__main__':

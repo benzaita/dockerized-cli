@@ -30,6 +30,9 @@ class TestCli(unittest.TestCase):
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(result.output, 'Refusing to overwrite .dockerized\n')
 
+    def test_exec_exit_code(self):
+        result = self.runner.invoke(cli, ['exec', 'exit 42'])
+        self.assertEqual(result.exit_code, 42)
 
 if __name__ == '__main__':
     unittest.main()
