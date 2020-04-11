@@ -1,16 +1,23 @@
-from pathlib import Path
-from typing import List
+import sys
 import subprocess
+from pathlib import Path
 
 # Why not use the Docker Compose API directly?
 # Because [it is not officially supported](https://github.com/docker/compose/issues/4542#issuecomment-283191533)
 
 
 class DockerCompose:
-    def run(self, stdout, stderr, composefile: Path, working_dir: Path, bind_dir: Path, command: List[str]):
-        import sys
+    def run(self, composefile: Path, working_dir: Path, bind_dir: Path, command: str):
         try:
-            process = subprocess.Popen(' '.join(command), stdout=sys.stdout, stderr=sys.stderr, shell=True)
+            args = [
+                'docker-compose',
+                '-f',
+                composefile,
+                'run',
+                'dockerized',
+                command
+            ]
+            process = subprocess.Popen(args, stdout=sys.stdout, stderr=sys.stderr)
             return process.wait()
         except Exception as e:
             raise e

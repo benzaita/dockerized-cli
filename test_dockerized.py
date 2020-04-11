@@ -34,6 +34,7 @@ class TestEndToEnd(unittest.TestCase):
 
     def test_exec_exit_code(self):
         self.assertDockerized(
+            fixture_name='_init',
             command='exec exit 42',
             expected_exit_code=42,
             expected_stdout=b'',
@@ -42,6 +43,7 @@ class TestEndToEnd(unittest.TestCase):
 
     def test_exec_pipes_stdout(self):
         self.assertDockerized(
+            fixture_name='_init',
             command='exec echo something out',
             expected_exit_code=0,
             expected_stdout=b'something out\n',
@@ -50,24 +52,28 @@ class TestEndToEnd(unittest.TestCase):
 
     def test_exec_pipes_stderr(self):
         self.assertDockerized(
+            fixture_name='_init',
             command='exec echo \'something err >&2\'',
             expected_exit_code=0,
             expected_stdout=b'',
             expected_stderr=b'something err\n',
         )
 
-    def test_exec_runs_in_container_built_by_Dockerfile(self):
+    def test_exec_takes_env_vars_from_docker_compose_file(self):
         self.assertDockerized(
             fixture_name='with_foo_env_var',
-            command='exec echo $FOO',
+            command='exec echo FOO=\$FOO',
             expected_exit_code=0,
-            expected_stdout=b'1\n',
+            expected_stdout=b'FOO=1\n',
             expected_stderr=b'',
         )
 
     def assertDockerized(self, command, expected_exit_code, expected_stdout, expected_stderr, fixture_name=None):
         if fixture_name is not None:
-            self._copy_fixture_to_working_dir(fixture_name)
+            if fixture_name == '_init':
+                self.run_dockerized('init')
+            else:
+                self._copy_fixture_to_working_dir(fixture_name)
         exit_code, stdout, stderr = self.run_dockerized(command)
         self.assertEqual(expected_stderr, stderr)
         self.assertEqual(expected_stdout, stdout)

@@ -15,23 +15,19 @@ class TestExecCommand(unittest.TestCase):
 
     def setUp(self) -> None:
         self.temp_dir = Path(tempfile.mkdtemp())
-        self.stdout = io.StringIO()
-        self.stderr = io.StringIO()
 
     def tearDown(self) -> None:
         rmtree(self.temp_dir)
 
     def test_invokes_docker_run(self):
         with patch.object(DockerCompose, 'run', return_value=None) as mock_run:
-            exec_command = ExecCommand(self.temp_dir, self.stdout, self.stderr, ['command', 'arg1'])
+            exec_command = ExecCommand(self.temp_dir, 'command arg1')
             exec_command.run()
         mock_run.assert_called_once_with(
-            stdout=self.stdout,
-            stderr=self.stderr,
             composefile=self.temp_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml'),
             working_dir=Path(os.getcwd()),
             bind_dir=self.temp_dir,
-            command=['command', 'arg1']
+            command='command arg1'
         )
 
 

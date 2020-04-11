@@ -25,10 +25,6 @@ def init():
 @main.command()
 @click.argument('command', nargs=-1, type=click.UNPROCESSED)
 def exec(command):
-    stdout = click.get_text_stream('stdout')
-    stderr = click.get_text_stream('stderr')
-    exec_command = ExecCommand(Path.cwd(), stdout, stderr, command)
+    exec_command = ExecCommand(Path.cwd(), ' '.join(command))
     exit_code = exec_command.run()
-    stdout.flush()
-    stderr.flush()
     click.get_current_context().exit(exit_code)
