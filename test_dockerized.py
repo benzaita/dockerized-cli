@@ -4,7 +4,7 @@ import unittest
 import tempfile
 
 
-class TestCli(unittest.TestCase):
+class TestEndToEnd(unittest.TestCase):
     temp_dir: str
 
     def setUp(self) -> None:
