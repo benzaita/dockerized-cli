@@ -14,6 +14,7 @@ class DockerCompose:
                 '-f',
                 composefile,
                 'run',
+                '--rm',
                 'dockerized',
                 command
             ]
