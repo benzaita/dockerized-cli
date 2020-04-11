@@ -29,5 +29,6 @@ def exec(command):
     stderr = click.get_text_stream('stderr')
     exec_command = ExecCommand(Path.cwd(), stdout, stderr, command)
     exit_code = exec_command.run()
+    stdout.flush()
     stderr.flush()
     click.get_current_context().exit(exit_code)
