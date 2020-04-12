@@ -87,6 +87,15 @@ class TestEndToEnd(unittest.TestCase):
             expected_stderr=b'',
         )
 
+    def test_exec_fails_when_not_in_project_sub_dir(self):
+        self.assertDockerized(
+            fixture_name='with_no_project',
+            command='exec true',
+            expected_exit_code=1,
+            expected_stdout=b'',
+            expected_stderr=b'Not inside a Dockerized project directory. Did you run \'dockerized init\'?\n',
+        )
+
     def assertDockerized(self, command, expected_exit_code, expected_stdout, expected_stderr, fixture_name=None, working_dir=None):
         if fixture_name is not None:
             if fixture_name == '_init':
