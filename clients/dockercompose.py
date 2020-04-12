@@ -17,6 +17,8 @@ class DockerCompose:
             composefile,
             'run',
             '--rm',
+            '-v', f"{bind_dir}:{bind_dir}",
+            '-w', bind_dir,
             'dockerized',
             command
         ]
