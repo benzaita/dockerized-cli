@@ -106,7 +106,14 @@ class TestEndToEnd(unittest.TestCase):
             expected_stderr=b'Not inside a Dockerized project directory. Did you run \'dockerized init\'?\n',
         )
 
-    # TODO test_exec_takes_command_with_args: ls -l
+    def test_exec_takes_command_with_args(self):
+        self.assertDockerized(
+            fixture_name='with_files',
+            command='exec id -u',
+            expected_exit_code=0,
+            expected_stdout=b'0\n',
+            expected_stderr=b'',
+        )
 
     def assertDockerized(self, command, expected_exit_code, expected_stdout, expected_stderr, fixture_name=None, working_dir=None):
         if fixture_name is not None:

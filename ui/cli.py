@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 import click
@@ -22,7 +23,9 @@ def init():
     click.echo('created')
 
 
-@main.command()
+@main.command(context_settings=dict(
+    ignore_unknown_options=True,
+))
 @click.argument('command', nargs=-1, type=click.UNPROCESSED)
 def exec(command):
     exec_command = ExecCommand(' '.join(command))
