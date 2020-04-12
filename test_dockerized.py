@@ -87,6 +87,16 @@ class TestEndToEnd(unittest.TestCase):
             expected_stderr=b'',
         )
 
+    def test_exec_makes_the_entire_project_dir_available_in_the_container(self):
+        self.assertDockerized(
+            fixture_name='with_files',
+            working_dir='dir',
+            command='exec cat ../file_in_project_root.txt',
+            expected_exit_code=0,
+            expected_stdout=b'Hello from project root\n',
+            expected_stderr=b'',
+        )
+
     def test_exec_fails_when_not_in_project_sub_dir(self):
         self.assertDockerized(
             fixture_name='with_no_project',
@@ -95,6 +105,8 @@ class TestEndToEnd(unittest.TestCase):
             expected_stdout=b'',
             expected_stderr=b'Not inside a Dockerized project directory. Did you run \'dockerized init\'?\n',
         )
+
+    # TODO test_exec_takes_command_with_args: ls -l
 
     def assertDockerized(self, command, expected_exit_code, expected_stdout, expected_stderr, fixture_name=None, working_dir=None):
         if fixture_name is not None:

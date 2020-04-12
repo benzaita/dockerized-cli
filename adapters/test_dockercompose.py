@@ -15,14 +15,14 @@ class TestDockerCompose(TestCase):
     def test_run_adds_dash_rm(self):
         docker_compose = DockerCompose()
         with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
-            docker_compose.run(Path('composefile'), 'working-dir', 'bind-dir', 'command')
+            docker_compose.run(Path('composefile'), Path('working-dir'), Path('project-dir'), 'command')
         mock_Popen.assert_called_once_with([
             'docker-compose',
-            '-f', Path('composefile'),
+            '-f', 'composefile',
             'run',
             '--rm',
-            '-v', 'bind-dir:bind-dir',
-            '-w', 'bind-dir',
+            '-v', 'project-dir:project-dir',
+            '-w', 'working-dir',
             'dockerized',
             'command'
         ], stdout=mock.ANY, stderr=mock.ANY)

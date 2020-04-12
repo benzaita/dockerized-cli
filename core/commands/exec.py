@@ -23,6 +23,6 @@ class ExecCommand:
         return docker_compose.run(
             composefile=project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml'),
             working_dir=working_dir,
-            bind_dir=working_dir,
+            project_dir=project_dir,
             command=self.command
         )

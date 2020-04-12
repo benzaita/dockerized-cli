@@ -20,7 +20,7 @@ class TestExecCommand(unittest.TestCase):
         mock_run.assert_called_once_with(
             composefile=project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml'),
             working_dir=working_dir,
-            bind_dir=working_dir,
+            project_dir=project_dir,
             command='command arg1'
         )
 

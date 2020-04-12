@@ -7,18 +7,18 @@ logger = logging.getLogger(__name__)
 
 
 class DockerCompose:
-    def run(self, composefile: Path, working_dir: Path, bind_dir: Path, command: str):
+    def run(self, composefile: Path, working_dir: Path, project_dir: Path, command: str):
         # Why not use the Docker Compose API directly?
         # Because [it is not officially supported](https://github.com/docker/compose/issues/4542#issuecomment-283191533)
 
         args = [
             'docker-compose',
             '-f',
-            composefile,
+            str(composefile),
             'run',
             '--rm',
-            '-v', f"{bind_dir}:{bind_dir}",
-            '-w', bind_dir,
+            '-v', f"{str(project_dir)}:{str(project_dir)}",
+            '-w', str(working_dir),
             'dockerized',
             command
         ]
