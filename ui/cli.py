@@ -25,6 +25,6 @@ def init():
 @main.command()
 @click.argument('command', nargs=-1, type=click.UNPROCESSED)
 def exec(command):
-    exec_command = ExecCommand(Path.cwd(), ' '.join(command))
+    exec_command = ExecCommand(' '.join(command))
     exit_code = exec_command.run()
     click.get_current_context().exit(exit_code)

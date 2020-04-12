@@ -17,5 +17,12 @@ class TestDockerCompose(TestCase):
         with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
             docker_compose.run(Path('composefile'), 'working-dir', 'bind-dir', 'command')
         mock_Popen.assert_called_once_with([
-            'docker-compose', '-f', Path('composefile'), 'run', '--rm', 'dockerized', 'command'
+            'docker-compose',
+            '-f', Path('composefile'),
+            'run',
+            '--rm',
+            '-v', 'bind-dir:bind-dir',
+            '-w', 'bind-dir',
+            'dockerized',
+            'command'
         ], stdout=mock.ANY, stderr=mock.ANY)
