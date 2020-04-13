@@ -68,6 +68,15 @@ class TestEndToEnd(unittest.TestCase):
             expected_stderr=b'',
         )
 
+    def test_exec_passes_the_command_line_verbatim(self):
+        self.assert_dockerized(
+            fixture_name='with_foo_env_var',
+            command='exec \'env FOO=2 | grep FOO\'',
+            expected_exit_code=0,
+            expected_stdout=b'FOO=2\n',
+            expected_stderr=b'',
+        )
+
     def test_exec_binds_project_dir(self):
         self.assert_dockerized(
             fixture_name='with_files',
