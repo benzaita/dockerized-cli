@@ -16,7 +16,7 @@ class TestEndToEnd(unittest.TestCase):
         shutil.rmtree(self.project_dir)
 
     def test_init_succeeds(self):
-        self.assertDockerized(
+        self.assert_dockerized(
             command='init',
             expected_exit_code=0,
             expected_stdout=b'created\n',
@@ -25,7 +25,7 @@ class TestEndToEnd(unittest.TestCase):
 
     def test_init_fails(self):
         self.run_dockerized('init')
-        self.assertDockerized(
+        self.assert_dockerized(
             command='init',
             expected_exit_code=1,
             expected_stdout=b'',
@@ -33,7 +33,7 @@ class TestEndToEnd(unittest.TestCase):
         )
 
     def test_exec_exit_code(self):
-        self.assertDockerized(
+        self.assert_dockerized(
             fixture_name='_init',
             command='exec exit 42',
             expected_exit_code=42,
@@ -42,7 +42,7 @@ class TestEndToEnd(unittest.TestCase):
         )
 
     def test_exec_pipes_stdout(self):
-        self.assertDockerized(
+        self.assert_dockerized(
             fixture_name='_init',
             command='exec echo something out',
             expected_exit_code=0,
@@ -51,7 +51,7 @@ class TestEndToEnd(unittest.TestCase):
         )
 
     def test_exec_pipes_stderr(self):
-        self.assertDockerized(
+        self.assert_dockerized(
             fixture_name='_init',
             command='exec echo \'something err >&2\'',
             expected_exit_code=0,
@@ -60,7 +60,7 @@ class TestEndToEnd(unittest.TestCase):
         )
 
     def test_exec_takes_env_vars_from_docker_compose_file(self):
-        self.assertDockerized(
+        self.assert_dockerized(
             fixture_name='with_foo_env_var',
             command='exec echo FOO=\\$FOO',
             expected_exit_code=0,
@@ -69,7 +69,7 @@ class TestEndToEnd(unittest.TestCase):
         )
 
     def test_exec_binds_project_dir(self):
-        self.assertDockerized(
+        self.assert_dockerized(
             fixture_name='with_files',
             command='exec cat dir/file.txt',
             expected_exit_code=0,
@@ -78,7 +78,7 @@ class TestEndToEnd(unittest.TestCase):
         )
 
     def test_exec_runs_from_sub_dir(self):
-        self.assertDockerized(
+        self.assert_dockerized(
             fixture_name='with_files',
             working_dir='dir',
             command='exec cat file.txt',
@@ -88,7 +88,7 @@ class TestEndToEnd(unittest.TestCase):
         )
 
     def test_exec_makes_the_entire_project_dir_available_in_the_container(self):
-        self.assertDockerized(
+        self.assert_dockerized(
             fixture_name='with_files',
             working_dir='dir',
             command='exec cat ../file_in_project_root.txt',
@@ -98,7 +98,7 @@ class TestEndToEnd(unittest.TestCase):
         )
 
     def test_exec_fails_when_not_in_project_sub_dir(self):
-        self.assertDockerized(
+        self.assert_dockerized(
             fixture_name='with_no_project',
             command='exec true',
             expected_exit_code=1,
@@ -107,7 +107,7 @@ class TestEndToEnd(unittest.TestCase):
         )
 
     def test_exec_takes_command_with_args(self):
-        self.assertDockerized(
+        self.assert_dockerized(
             fixture_name='with_files',
             command='exec id -u',
             expected_exit_code=0,
@@ -115,7 +115,7 @@ class TestEndToEnd(unittest.TestCase):
             expected_stderr=b'',
         )
 
-    def assertDockerized(self, command, expected_exit_code, expected_stdout, expected_stderr, fixture_name=None, working_dir=None):
+    def assert_dockerized(self, command, expected_exit_code, expected_stdout, expected_stderr, fixture_name=None, working_dir=None):
         if fixture_name is not None:
             if fixture_name == '_init':
                 self.run_dockerized('init')
