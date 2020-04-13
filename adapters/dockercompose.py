@@ -13,8 +13,8 @@ class DockerCompose:
 
         args = [
             'docker-compose',
-            '-f',
-            str(composefile),
+            '-f', str(composefile),
+            '--project-name', str(project_dir),
             'run',
             '--rm',
             '-v', f"{str(project_dir)}:{str(project_dir)}",

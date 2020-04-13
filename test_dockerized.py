@@ -3,42 +3,52 @@ import os
 import shutil
 import unittest
 import tempfile
+from typing import List
 from unittest.case import TestCase
 
 
 class AbstractEndToEndTest(TestCase):
-    project_dir: str
+    project_dirs: List[str]
 
     def setUp(self) -> None:
-        self.project_dir = tempfile.mkdtemp()
-        os.chdir(self.project_dir)
+        self.project_dirs = []
+        self.add_project_dir()
 
     def tearDown(self) -> None:
-        shutil.rmtree(self.project_dir)
+        for path in self.project_dirs:
+            shutil.rmtree(path)
 
-    def run_dockerized(self, cmd_line, working_dir=None):
+    def run_dockerized(self, cmd_line, working_dir=None, project_dir=None):
+        safe_project_dir = project_dir or self.project_dirs[0]
         this_file_path = os.path.dirname(os.path.realpath(__file__))
         dockerized = this_file_path + '/dockerized.py'
-        cwd = self.project_dir if working_dir is None else f"{self.project_dir}/{working_dir}"
+        cwd = safe_project_dir if working_dir is None else f"{safe_project_dir}/{working_dir}"
         process = subprocess.run(f"{dockerized} {cmd_line}", cwd=cwd, shell=True, capture_output=True)
         return process.returncode, process.stdout, process.stderr
 
-    def setup_project_dir(self, fixture_name):
-        shutil.rmtree(self.project_dir)
-
-        this_file_path = os.path.dirname(os.path.realpath(__file__))
-        shutil.copytree(this_file_path + '/fixtures/' + fixture_name, self.project_dir)
-
-    def assert_dockerized(self, command, expected_exit_code, expected_stdout, expected_stderr, fixture_name=None, working_dir=None):
+    def assert_dockerized(self, command, expected_exit_code, expected_stdout, expected_stderr, fixture_name=None,
+                          working_dir=None, project_dir=None):
+        safe_project_dir = project_dir or self.project_dirs[0]
         if fixture_name is not None:
             if fixture_name == '_init':
                 self.run_dockerized('init')
             else:
-                self.setup_project_dir(fixture_name)
+                self.setup_project_dir(fixture_name, safe_project_dir)
         exit_code, stdout, stderr = self.run_dockerized(command, working_dir)
         self.assertEqual(expected_stderr, stderr)
         self.assertEqual(expected_stdout, stdout)
         self.assertEqual(expected_exit_code, exit_code)
+
+    def add_project_dir(self):
+        path = tempfile.mkdtemp()
+        self.project_dirs.append(path)
+        return path
+
+    def setup_project_dir(self, fixture_name, project_dir):
+        shutil.rmtree(project_dir)
+
+        this_file_path = os.path.dirname(os.path.realpath(__file__))
+        shutil.copytree(this_file_path + '/fixtures/' + fixture_name, project_dir)
 
 
 class EndToEndTest(AbstractEndToEndTest):
@@ -151,6 +161,25 @@ class EndToEndTest(AbstractEndToEndTest):
             expected_stdout=b'0\n',
             expected_stderr=b'',
         )
+
+    def test_exec_in_two_dirs_does_not_conflict(self):
+        foo_dir = self.add_project_dir()
+        bar_dir = self.add_project_dir()
+
+        self.setup_project_dir('with_foo_in_dockerfile', foo_dir)
+        self.setup_project_dir('with_bar_in_dockerfile', bar_dir)
+
+        self.run_dockerized('exec true', project_dir=foo_dir)
+        self.run_dockerized('exec true', project_dir=bar_dir)
+
+        _, stdout_foo, stderr_foo = self.run_dockerized('exec \'echo $TEST_VAR\'', project_dir=foo_dir)
+        _, stdout_bar, stderr_bar = self.run_dockerized('exec \'echo $TEST_VAR\'', project_dir=bar_dir)
+
+        self.assertEqual(b'', stderr_foo)
+        self.assertEqual(b'', stderr_bar)
+
+        self.assertEqual(b'foo\n', stdout_foo)
+        self.assertEqual(b'bar\n', stdout_bar)
 
 
 if __name__ == '__main__':

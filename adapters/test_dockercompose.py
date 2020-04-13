@@ -19,6 +19,7 @@ class TestDockerCompose(TestCase):
         mock_Popen.assert_called_once_with([
             'docker-compose',
             '-f', 'composefile',
+            '--project-name', 'project-dir',
             'run',
             '--rm',
             '-v', 'project-dir:project-dir',
