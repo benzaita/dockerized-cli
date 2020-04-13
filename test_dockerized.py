@@ -3,9 +3,10 @@ import os
 import shutil
 import unittest
 import tempfile
+from unittest.case import TestCase
 
 
-class TestEndToEnd(unittest.TestCase):
+class AbstractEndToEndTest(TestCase):
     project_dir: str
 
     def setUp(self) -> None:
@@ -14,6 +15,33 @@ class TestEndToEnd(unittest.TestCase):
 
     def tearDown(self) -> None:
         shutil.rmtree(self.project_dir)
+
+    def run_dockerized(self, cmd_line, working_dir=None):
+        this_file_path = os.path.dirname(os.path.realpath(__file__))
+        dockerized = this_file_path + '/dockerized.py'
+        cwd = self.project_dir if working_dir is None else f"{self.project_dir}/{working_dir}"
+        process = subprocess.run(f"{dockerized} {cmd_line}", cwd=cwd, shell=True, capture_output=True)
+        return process.returncode, process.stdout, process.stderr
+
+    def setup_project_dir(self, fixture_name):
+        shutil.rmtree(self.project_dir)
+
+        this_file_path = os.path.dirname(os.path.realpath(__file__))
+        shutil.copytree(this_file_path + '/fixtures/' + fixture_name, self.project_dir)
+
+    def assert_dockerized(self, command, expected_exit_code, expected_stdout, expected_stderr, fixture_name=None, working_dir=None):
+        if fixture_name is not None:
+            if fixture_name == '_init':
+                self.run_dockerized('init')
+            else:
+                self.setup_project_dir(fixture_name)
+        exit_code, stdout, stderr = self.run_dockerized(command, working_dir)
+        self.assertEqual(expected_stderr, stderr)
+        self.assertEqual(expected_stdout, stdout)
+        self.assertEqual(expected_exit_code, exit_code)
+
+
+class EndToEndTest(AbstractEndToEndTest):
 
     def test_init_succeeds(self):
         self.assert_dockerized(
@@ -123,30 +151,6 @@ class TestEndToEnd(unittest.TestCase):
             expected_stdout=b'0\n',
             expected_stderr=b'',
         )
-
-    def assert_dockerized(self, command, expected_exit_code, expected_stdout, expected_stderr, fixture_name=None, working_dir=None):
-        if fixture_name is not None:
-            if fixture_name == '_init':
-                self.run_dockerized('init')
-            else:
-                self.setup_project_dir(fixture_name)
-        exit_code, stdout, stderr = self.run_dockerized(command, working_dir)
-        self.assertEqual(expected_stderr, stderr)
-        self.assertEqual(expected_stdout, stdout)
-        self.assertEqual(expected_exit_code, exit_code)
-
-    def run_dockerized(self, cmd_line, working_dir=None):
-        this_file_path = os.path.dirname(os.path.realpath(__file__))
-        dockerized = this_file_path + '/dockerized.py'
-        cwd = self.project_dir if working_dir is None else f"{self.project_dir}/{working_dir}"
-        process = subprocess.run(f"{dockerized} {cmd_line}", cwd=cwd, shell=True, capture_output=True)
-        return process.returncode, process.stdout, process.stderr
-
-    def setup_project_dir(self, fixture_name):
-        shutil.rmtree(self.project_dir)
-
-        this_file_path = os.path.dirname(os.path.realpath(__file__))
-        shutil.copytree(this_file_path + '/fixtures/' + fixture_name, self.project_dir)
 
 
 if __name__ == '__main__':
