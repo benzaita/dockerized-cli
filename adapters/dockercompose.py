@@ -32,3 +32,20 @@ class DockerCompose:
 
         logger.info(f"Finished with exit-code {exit_code}")
         return exit_code
+
+    def clean(self, composefile: Path, project_dir: Path):
+        args = [
+            'docker-compose',
+            '-f', str(composefile),
+            '--project-name', str(project_dir),
+            'down'
+        ]
+        logger.info(f"Running: {args}")
+        try:
+            process = subprocess.Popen(args, stdout=sys.stdout, stderr=sys.stderr)
+            exit_code = process.wait()
+        except Exception as e:
+            logger.error(f"Raised exception: {e}")
+            raise e
+
+        logger.info(f"Finished with exit-code {exit_code}")

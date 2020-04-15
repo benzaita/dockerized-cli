@@ -16,6 +16,7 @@ class AbstractEndToEndTest(TestCase):
 
     def tearDown(self) -> None:
         for path in self.project_dirs:
+            self.run_dockerized('clean', project_dir=path)
             shutil.rmtree(path)
 
     def run_dockerized(self, cmd_line, working_dir=None, project_dir=None):

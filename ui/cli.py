@@ -1,8 +1,8 @@
-import sys
 from pathlib import Path
 
 import click
 
+from core.commands.clean import CleanCommand
 from core.commands.init import InitCommand, InitError
 from core.commands.exec import ExecCommand, ExecError
 
@@ -35,3 +35,9 @@ def exec(command):
         click.echo(err.message, err=True)
         click.get_current_context().exit(1)
     click.get_current_context().exit(exit_code)
+
+
+@main.command()
+def clean():
+    clean_command = CleanCommand()
+    clean_command.run()
