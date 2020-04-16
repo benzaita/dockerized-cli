@@ -2,6 +2,7 @@ from pathlib import Path
 
 import click
 
+from core.commands.shell import ShellCommand
 from core.commands.clean import CleanCommand
 from core.commands.init import InitCommand, InitError
 from core.commands.exec import ExecCommand, ExecError
@@ -41,3 +42,8 @@ def exec(command):
 def clean():
     clean_command = CleanCommand()
     clean_command.run()
+
+@main.command()
+def shell():
+    shell_command = ShellCommand()
+    shell_command.run()
