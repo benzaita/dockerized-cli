@@ -1,11 +1,11 @@
-import os
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
 from adapters.dockercompose import DockerCompose
 from adapters.environment import Environment
-from core.commands.exec import ExecCommand, ExecError
+from core.commands.exec import ExecCommand
+from core.commands.errors import CommandError
 
 
 class TestExecCommand(unittest.TestCase):
@@ -27,9 +27,8 @@ class TestExecCommand(unittest.TestCase):
         with patch.object(Environment, 'get_project_dir', return_value=None):
             with patch.object(Environment, 'get_working_dir', return_value=working_dir):
                 with patch.object(DockerCompose, 'run', return_value=None) as mock_run:
-                    exec_command = ExecCommand('command arg1')
-                    self.assertRaisesRegex(ExecError, 'Not inside a Dockerized project directory. Did you run '
-                                                      '\'dockerized init\'?', lambda: exec_command.run())
+                    self.assertRaisesRegex(CommandError, 'Not inside a Dockerized project directory. Did you run '
+                                                      '\'dockerized init\'?', lambda: ExecCommand('command arg1'))
         mock_run.assert_not_called()
 
 

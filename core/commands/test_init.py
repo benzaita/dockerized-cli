@@ -4,7 +4,8 @@ import tempfile
 from pathlib import Path
 from shutil import rmtree
 
-from core.commands.init import InitCommand, InitError
+from core.commands.init import InitCommand
+from core.commands.errors import CommandError
 
 
 class TestInitCommand(unittest.TestCase):
@@ -24,7 +25,7 @@ class TestInitCommand(unittest.TestCase):
     def test_fails_if_dir_exists(self):
         init_command = InitCommand(self.temp_dir)
         init_command.run()
-        with self.assertRaisesRegex(InitError, 'Refusing to overwrite .dockerized'):
+        with self.assertRaisesRegex(CommandError, 'Refusing to overwrite .dockerized'):
             init_command.run()
 
     def test_creates_dockerfile(self):

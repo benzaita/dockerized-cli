@@ -1,15 +1,10 @@
 from pathlib import Path
-
+from core.commands.errors import CommandError
 
 dockerfile_content = """
 FROM busybox
 # Add your build dependencies here
 """
-
-class InitError(Exception):
-    def __init__(self, message, cause):
-        self.message = message
-        self.cause = cause
 
 
 class InitCommand:
@@ -22,7 +17,7 @@ class InitCommand:
         try:
             self.project_dir.joinpath('.dockerized').mkdir()
         except FileExistsError as err:
-            raise InitError('Refusing to overwrite .dockerized', err)
+            raise CommandError('Refusing to overwrite .dockerized')
 
         dockerfile_path = self.project_dir.joinpath('.dockerized').joinpath('Dockerfile.dockerized')
         dockerfile_path.write_text(dockerfile_content)

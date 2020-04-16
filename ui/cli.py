@@ -4,9 +4,19 @@ import click
 
 from core.commands.shell import ShellCommand
 from core.commands.clean import CleanCommand
-from core.commands.init import InitCommand, InitError
-from core.commands.exec import ExecCommand, ExecError
+from core.commands.init import InitCommand
+from core.commands.exec import ExecCommand
+from core.commands.errors import CommandError
 
+from contextlib import contextmanager
+
+@contextmanager
+def friendly_dockerized_errors(click):
+    try:
+        yield
+    except CommandError as err:
+        click.echo(err.message, err=True)
+        click.get_current_context().exit(1)
 
 @click.group()
 def main():
@@ -15,12 +25,9 @@ def main():
 
 @main.command()
 def init():
-    init_command = InitCommand(Path.cwd())
-    try:
+    with friendly_dockerized_errors(click):
+        init_command = InitCommand(Path.cwd())
         init_command.run()
-    except InitError as err:
-        click.echo(err.message, err=True)
-        click.get_current_context().exit(1)
     click.echo('created')
 
 
@@ -29,21 +36,23 @@ def init():
 ))
 @click.argument('command', nargs=-1, type=click.UNPROCESSED)
 def exec(command):
-    exec_command = ExecCommand(' '.join(command))
-    try:
+    exit_code = 0
+    with friendly_dockerized_errors(click):
+        exec_command = ExecCommand(' '.join(command))
         exit_code = exec_command.run()
-    except ExecError as err:
-        click.echo(err.message, err=True)
-        click.get_current_context().exit(1)
     click.get_current_context().exit(exit_code)
 
 
 @main.command()
 def clean():
-    clean_command = CleanCommand()
-    clean_command.run()
+    with friendly_dockerized_errors(click):
+        clean_command = CleanCommand()
+        clean_command.run()
 
 @main.command()
 def shell():
-    shell_command = ShellCommand()
-    shell_command.run()
+    exit_code = 0
+    with friendly_dockerized_errors(click):
+        shell_command = ShellCommand()
+        exit_code = shell_command.run()
+    click.get_current_context().exit(exit_code)
