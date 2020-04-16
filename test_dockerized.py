@@ -7,6 +7,8 @@ import tempfile
 from typing import List
 from unittest.case import TestCase
 
+# Why?!
+# Because Docker Compose [does not have a proper quiet/silent mode](https://github.com/docker/compose/issues/6026)
 DOCKER_COMPOSE_OUTPUT_REGEX = [
     re.compile(r'^Creating network .*'),
     re.compile(r'^Image for service .*? was built because it did not already exist..*'),
@@ -15,6 +17,9 @@ DOCKER_COMPOSE_OUTPUT_REGEX = [
     re.compile(r'^ ---> [0-9a-f]+$'),
     re.compile(r'^Successfully built [0-9a-f]+$'),
     re.compile(r'^Successfully tagged .*:latest$'),
+    re.compile(r'^.*?: Pulling from .*'),
+    re.compile(r'^Digest: sha256:.*'),
+    re.compile(r'^Status: Downloaded newer image for .*'),
 ]
 
 
