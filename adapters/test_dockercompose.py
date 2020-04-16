@@ -13,9 +13,9 @@ class MockProcess:
 
 class TestDockerCompose(TestCase):
     def test_run_adds_dash_rm(self):
-        docker_compose = DockerCompose()
+        docker_compose = DockerCompose(Path('composefile'), Path('project-dir'))
         with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
-            docker_compose.run(Path('composefile'), Path('working-dir'), Path('project-dir'), 'command')
+            docker_compose.run(Path('working-dir'), 'command')
         mock_Popen.assert_called_once_with([
             'docker-compose',
             '-f', 'composefile',
