@@ -103,6 +103,24 @@ class EndToEndTest(AbstractEndToEndTest):
             expected_stderr='Refusing to overwrite .dockerized'
         )
 
+    def test_compose_delegates_to_docker_compose(self):
+        self.assert_dockerized(
+            fixture_name='_init',
+            command='compose ps --services',
+            expected_exit_code=0,
+            expected_stdout='dockerized',
+            expected_stderr=''
+        )
+
+    def test_compose_exit_code(self):
+        self.assert_dockerized(
+            fixture_name='_init',
+            command='compose kill foo',
+            expected_exit_code=1,
+            expected_stdout='',
+            expected_stderr='No such service: foo'
+        )
+
     def test_exec_exit_code(self):
         self.assert_dockerized(
             fixture_name='_init',

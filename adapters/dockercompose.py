@@ -20,13 +20,13 @@ class DockerCompose:
             'dockerized',
             command
         ]
-        exit_code = self.__run_docker_compose(docker_compose_args)
+        exit_code = self.execute_command(docker_compose_args)
         return exit_code
 
-    def clean(self):
-        self.__run_docker_compose(['down'])
+    def down(self):
+        self.execute_command(['down'])
 
-    def __run_docker_compose(self, docker_compose_args):
+    def execute_command(self, docker_compose_args):
         # Why not use the Docker Compose API directly?
         # Because [it is not officially supported](https://github.com/docker/compose/issues/4542#issuecomment-283191533)
         args = [
