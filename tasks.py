@@ -13,16 +13,3 @@ def dist(c):
     c.run('python setup.py sdist bdist_wheel')
 
 
-@task
-def testpublish(c):
-    c.run('python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*')
-
-
-@task
-def publish(c):
-    c.run('python -m twine upload dist/*')
-
-
-@task
-def testinstall(c):
-    c.run('pip install --index-url https://test.pypi.org/simple/ --no-deps dockerized')

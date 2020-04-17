@@ -39,7 +39,8 @@ jobs:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.test_pypi_apikey }}
       run: |
-        pipenv run invoke testpublish
+         pip install twine
+         python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
     - name: Install (test PyPi)
       run: |
-        pipenv run invoke testinstall
+         pip install --index-url https://test.pypi.org/simple/ --no-deps dockerized

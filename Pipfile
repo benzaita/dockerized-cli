@@ -7,7 +7,6 @@ verify_ssl = true
 invoke = "*"
 setuptools = "*"
 wheel = "*"
-twine = "*"
 
 [packages]
 click = "*"
