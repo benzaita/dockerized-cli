@@ -1,4 +1,4 @@
-from core.commands.dockercomposecommand import DockerComposeCommand
+from dockerized.core.commands.dockercomposecommand import DockerComposeCommand
 
 
 class ExecCommand(DockerComposeCommand):

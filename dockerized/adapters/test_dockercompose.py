@@ -3,7 +3,7 @@ from unittest import TestCase
 from unittest import mock
 import subprocess
 
-from adapters.dockercompose import DockerCompose
+from dockerized.adapters.dockercompose import DockerCompose
 
 
 class MockProcess:

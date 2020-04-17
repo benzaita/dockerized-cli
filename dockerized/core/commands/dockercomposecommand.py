@@ -1,7 +1,7 @@
 from pathlib import Path
-from adapters.dockercompose import DockerCompose
-from adapters.environment import Environment
-from core.commands.errors import CommandError
+from dockerized.adapters.dockercompose import DockerCompose
+from dockerized.adapters.environment import Environment
+from dockerized.core.commands.errors import CommandError
 
 
 class DockerComposeCommand:

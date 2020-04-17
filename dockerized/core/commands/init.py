@@ -1,5 +1,5 @@
 from pathlib import Path
-from core.commands.errors import CommandError
+from dockerized.core.commands.errors import CommandError
 
 dockerfile_content = """
 FROM busybox

@@ -4,9 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+invoke = "*"
+setuptools = "*"
+wheel = "*"
+twine = "*"
 
 [packages]
-invoke = "*"
 click = "*"
 
 [requires]

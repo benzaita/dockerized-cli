@@ -4,8 +4,8 @@ import tempfile
 from pathlib import Path
 from shutil import rmtree
 
-from core.commands.init import InitCommand
-from core.commands.errors import CommandError
+from dockerized.core.commands.init import InitCommand
+from dockerized.core.commands.errors import CommandError
 
 
 class TestInitCommand(unittest.TestCase):

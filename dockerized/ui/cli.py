@@ -2,12 +2,12 @@ from pathlib import Path
 
 import click
 
-from core.commands.compose import ComposeCommand
-from core.commands.shell import ShellCommand
-from core.commands.clean import CleanCommand
-from core.commands.init import InitCommand
-from core.commands.exec import ExecCommand
-from core.commands.errors import CommandError
+from dockerized.core.commands.compose import ComposeCommand
+from dockerized.core.commands.shell import ShellCommand
+from dockerized.core.commands.clean import CleanCommand
+from dockerized.core.commands.init import InitCommand
+from dockerized.core.commands.exec import ExecCommand
+from dockerized.core.commands.errors import CommandError
 
 from contextlib import contextmanager
 

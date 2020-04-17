@@ -66,8 +66,8 @@ class AbstractEndToEndTest(TestCase):
     def setup_project_dir(self, fixture_name, project_dir):
         shutil.rmtree(project_dir)
 
-        this_file_path = os.path.dirname(os.path.realpath(__file__))
-        shutil.copytree(this_file_path + '/fixtures/' + fixture_name, project_dir)
+        this_file_dir = os.path.dirname(os.path.realpath(__file__))
+        shutil.copytree(this_file_dir + '/fixtures/' + fixture_name, project_dir)
 
     def __filter_docker_compose_output(self, output):
         output_str = output.decode('utf-8')
