@@ -31,3 +31,15 @@ jobs:
     - name: Test
       run: |
         pipenv run invoke test
+    - name: Prepare distribution
+      run: |
+        pipenv run invoke dist
+    - name: Publish (test PyPi)
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.test_pypi_apikey }}
+      run: |
+        pipenv run invoke testpublish
+    - name: Install (test PyPi)
+      run: |
+        pipenv run invoke testinstall
