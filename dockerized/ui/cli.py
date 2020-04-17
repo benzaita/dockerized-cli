@@ -2,6 +2,7 @@ from pathlib import Path
 
 import click
 
+from dockerized.core.commands.version import VersionCommand
 from dockerized.core.commands.compose import ComposeCommand
 from dockerized.core.commands.shell import ShellCommand
 from dockerized.core.commands.clean import CleanCommand
@@ -103,3 +104,10 @@ def compose(command):
         compose_command = ComposeCommand(command)
         exit_code = compose_command.run()
     click.get_current_context().exit(exit_code)
+
+
+@main.command()
+def version():
+    version_command = VersionCommand()
+    version = version_command.run()
+    click.echo(version)

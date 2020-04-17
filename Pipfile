@@ -7,6 +7,7 @@ verify_ssl = true
 invoke = "*"
 setuptools = "*"
 wheel = "*"
+bumpversion = "*"
 
 [packages]
 click = "*"

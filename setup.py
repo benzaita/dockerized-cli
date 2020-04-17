@@ -4,8 +4,7 @@ import json
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-with open('manifest.json', 'r') as fh:
-    version = json.load(fh)['version']
+version = '0.9.3'
 
 setuptools.setup(
     name="dockerized",
