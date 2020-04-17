@@ -13,3 +13,6 @@ def dist(c):
     c.run('python setup.py sdist bdist_wheel')
 
 
+@task
+def bumpversion(c, part):
+    c.run(f"bumpversion {part}")
