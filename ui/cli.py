@@ -26,7 +26,9 @@ def main():
     pass
 
 
-@main.command()
+@main.command(
+    short_help='Initialize Dockerized in the current directory'
+)
 def init():
     with friendly_dockerized_errors(click):
         init_command = InitCommand(Path.cwd())
@@ -34,9 +36,31 @@ def init():
     click.echo('created')
 
 
-@main.command(context_settings=dict(
-    ignore_unknown_options=True,
-))
+@main.command(
+    short_help='Execute a command in the container',
+    help="""
+    Execute COMMAND in the 'dockerized' container. The project directory (the 
+    parent of the .dockerized/ directory), as well as the current working 
+    directory are available to COMMAND. This means you can seamlessly run 
+    commands like `ls -l` or `pwd` -- the will produce the same output in the
+    container as in the host. Additionally, you can seamlessly run commands 
+    which depend on tools that are available in the container, but not on the
+    host.
+    
+    ## Passing environment variables
+    
+    To pass environment variables to the COMMAND, simply prepend it with them:
+    
+       dockerized exec FOO=123 env
+    
+    If you always pass the same environment variables to the container, you 
+    can instead put them inside the `.dockerized/docker-compose.dockerized.yml`
+    file under the `services.dockerized.environment` section. 
+    """,
+    context_settings=dict(
+        ignore_unknown_options=True,
+    )
+)
 @click.argument('command', nargs=-1, type=click.UNPROCESSED)
 def exec(command):
     exit_code = 0
@@ -46,14 +70,18 @@ def exec(command):
     click.get_current_context().exit(exit_code)
 
 
-@main.command()
+@main.command(
+    short_help='Clean the Docker resources used by this project'
+)
 def clean():
     with friendly_dockerized_errors(click):
         clean_command = CleanCommand()
         clean_command.run()
 
 
-@main.command()
+@main.command(
+    short_help='Enter an interactive shell inside the container'
+)
 def shell():
     exit_code = 0
     with friendly_dockerized_errors(click):
@@ -62,9 +90,12 @@ def shell():
     click.get_current_context().exit(exit_code)
 
 
-@main.command(context_settings=dict(
-    ignore_unknown_options=True,
-))
+@main.command(
+    short_help='Run an arbitrary Docker-Compose command in this project',
+    context_settings=dict(
+        ignore_unknown_options=True,
+    )
+)
 @click.argument('command', nargs=-1, type=click.UNPROCESSED)
 def compose(command):
     exit_code = 0
