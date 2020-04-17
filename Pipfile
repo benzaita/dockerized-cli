@@ -8,6 +8,7 @@ invoke = "*"
 setuptools = "*"
 wheel = "*"
 bumpversion = "*"
+pipenv-setup = "*"
 
 [packages]
 click = "*"

@@ -1,12 +1,12 @@
-import setuptools
+from setuptools import setup
 import json
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-version = '0.9.5'
+version = "0.9.5"
 
-setuptools.setup(
+setup(
     name="dockerized",
     version=version,
     author="Itamar Ben-Zaken",

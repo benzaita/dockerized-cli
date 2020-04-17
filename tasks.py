@@ -10,6 +10,7 @@ def test(c):
 def dist(c):
     c.run('cp dockerized.py bin/dockerized')
     c.run('rm -rf dist/')
+    c.run('pipenv-setup sync')
     c.run('python setup.py sdist bdist_wheel')
 
 
