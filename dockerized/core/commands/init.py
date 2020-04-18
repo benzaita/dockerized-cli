@@ -6,6 +6,22 @@ FROM busybox
 # Add your build dependencies here
 """
 
+composefile_content = """
+version: '2'
+services:
+  dockerized:
+    build:
+      context: .
+      dockerfile: Dockerfile.dockerized
+    entrypoint:
+      - sh
+      - '-c'
+"""
+
+gitignore_content = """
+lock
+prepared
+"""
 
 class InitCommand:
     project_dir: Path
@@ -23,15 +39,7 @@ class InitCommand:
         dockerfile_path.write_text(dockerfile_content)
 
         composefile_path = self.project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml')
-        composefile_content = """
-version: '2'
-services:
-  dockerized:
-    build:
-      context: .
-      dockerfile: Dockerfile.dockerized
-    entrypoint:
-      - sh
-      - '-c'
-"""
         composefile_path.write_text(composefile_content)
+
+        gitignore_path = self.project_dir.joinpath('.dockerized').joinpath('.gitignore')
+        gitignore_path.write_text(gitignore_content)

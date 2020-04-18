@@ -4,8 +4,10 @@ import os
 import shutil
 import unittest
 import tempfile
+from concurrent.futures.thread import ThreadPoolExecutor
 from typing import List
 from unittest.case import TestCase
+from pathlib import Path
 
 # Why?!
 # Because Docker Compose [does not have a proper quiet/silent mode](https://github.com/docker/compose/issues/6026)
@@ -231,6 +233,39 @@ class EndToEndTest(AbstractEndToEndTest):
 
         self.assertEqual(b'foo\n', stdout_foo)
         self.assertEqual(b'bar\n', stdout_bar)
+
+    def test_exec_parallel_invocations_prepare_only_once(self):
+        project_dir = self.add_project_dir()
+        self.setup_project_dir('with_foo_in_dockerfile', project_dir=project_dir)
+
+        num_of_parallel_invocations = 10
+        futures = [None] * num_of_parallel_invocations
+
+        print(f"Running {num_of_parallel_invocations} exec commands in parallel")
+        with ThreadPoolExecutor(max_workers=num_of_parallel_invocations) as executor:
+            for i in range(num_of_parallel_invocations):
+                futures[i] = executor.submit(lambda: self.run_dockerized('exec true', project_dir=project_dir))
+
+        results = [f.result() for f in futures]
+
+        exit_codes = [r[0] for r in results]
+        stdouts = [r[1].decode('utf-8') for r in results]
+        stderrs = [r[2].decode('utf-8') for r in results]
+
+        non_zero_exit_codes = [c for c in exit_codes if c != 0]
+        non_empty_stdouts = [s for s in stdouts if len(s) > 0]
+        non_empty_stderrs = [s for s in stderrs if len(s) > 0]
+
+        self.assertTrue(len(non_empty_stderrs) == 1,
+                        f"Expected only one STDERR to be not empty, got {len(non_empty_stderrs)}:\n" +
+                        '\n---\n'.join(non_empty_stderrs))
+
+        self.assertTrue(len(non_empty_stdouts) == 1,
+                        f"Expected only one STDOUT to be not empty, got {len(non_empty_stdouts)}:\n" +
+                        '\n---\n'.join(non_empty_stdouts))
+
+        self.assertTrue(len(non_zero_exit_codes) == 0,
+                        f"Expected all exit codes to be zero, got: {','.join(non_zero_exit_codes)}")
 
 
 if __name__ == '__main__':

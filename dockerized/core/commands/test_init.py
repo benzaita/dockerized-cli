@@ -55,5 +55,16 @@ class TestInitCommand(unittest.TestCase):
               - '-c'
         """))
 
+    def test_creates_gitignore(self):
+        init_command = InitCommand(self.temp_dir)
+        init_command.run()
+        gitignore_path = self.temp_dir.joinpath('.dockerized').joinpath('.gitignore')
+        self.assertTrue(gitignore_path.is_file())
+        self.assertEqual(gitignore_path.read_text(), textwrap.dedent("""
+            lock
+            prepared
+            """))
+
+
 if __name__ == '__main__':
     unittest.main()

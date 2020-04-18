@@ -6,4 +6,5 @@ class CleanCommand(DockerComposeCommand):
         super().__init__()
 
     def run(self):
-        return self.docker_compose.down()
+        self.docker_compose.down()
+        self.set_project_prepared(False)
