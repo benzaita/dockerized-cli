@@ -52,7 +52,7 @@ jobs:
       run: |
         pip install twine
         python -m twine upload dist/*
-    - name: Install (test PyPi)
+    - name: Install (PyPi)
       run: |
         pip install dockerized
         dockerized version
