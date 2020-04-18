@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 import click
@@ -23,8 +24,16 @@ def friendly_dockerized_errors(click):
 
 
 @click.group()
-def main():
-    pass
+@click.option(
+    '--loglevel',
+    default='WARNING',
+    type=click.Choice(
+        map(logging.getLevelName, [logging.INFO, logging.WARNING, logging.ERROR, logging.CRITICAL, logging.DEBUG]),
+        case_sensitive=True
+    )
+)
+def main(loglevel):
+    logging.basicConfig(level=loglevel)
 
 
 @main.command(
