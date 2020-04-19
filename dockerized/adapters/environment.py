@@ -21,3 +21,21 @@ class Environment:
 
     def get_working_dir(self):
         return Path(os.getcwd())
+
+    def touch_file(self, path: Path):
+        path.touch(exist_ok=False)
+
+    def unlink_file(self, path: Path):
+        path.unlink()
+
+    def path_exists(self, path: Path):
+        return path.exists()
+
+    def mkdir(self, path: Path):
+        path.mkdir()
+
+    def write_file(self, path: Path, content):
+        path.write_text(content)
+
+    def rmdir(self, path: Path):
+        path.rmdir()

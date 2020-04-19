@@ -41,7 +41,7 @@ class ExecCommand(DockerComposeCommand):
 
     def __try_lock(self):
         try:
-            self.lockpath.mkdir()
+            self.env.mkdir(self.lockpath)
             return True
         except OSError:
             if self.lockpath.is_dir():
@@ -50,7 +50,7 @@ class ExecCommand(DockerComposeCommand):
                 raise
 
     def __unlock(self):
-        self.lockpath.rmdir()
+        self.env.rmdir(self.lockpath)
 
     def __prepare(self):
         self.docker_compose.run(working_dir=self.project_dir, command='true')
