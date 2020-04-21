@@ -2,9 +2,9 @@ import unittest
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from adapters.dockercompose import DockerCompose
-from adapters.environment import Environment
-from core.commands.compose import ComposeCommand
+from dockerized.adapters.dockercompose import DockerCompose
+from dockerized.adapters.environment import Environment
+from dockerized.core.commands.compose import ComposeCommand
 
 
 class TestCleanCommand(unittest.TestCase):

@@ -2,9 +2,9 @@ import unittest
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from adapters.dockercompose import DockerCompose
-from adapters.environment import Environment
-from core.commands.shell import ShellCommand
+from dockerized.adapters.dockercompose import DockerCompose
+from dockerized.adapters.environment import Environment
+from dockerized.core.commands.shell import ShellCommand
 
 
 class TestShellCommand(unittest.TestCase):
