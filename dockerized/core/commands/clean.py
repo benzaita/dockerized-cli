@@ -6,5 +6,6 @@ class CleanCommand(DockerComposeCommand):
         super().__init__(env, docker_compose)
 
     def run(self):
-        self.docker_compose.down()
+        exit_code = self.docker_compose.down()
         self.project.set_prepared(False)
+        return exit_code

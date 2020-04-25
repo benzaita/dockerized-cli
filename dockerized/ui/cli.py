@@ -85,18 +85,22 @@ def exec(command):
     short_help='Clean the Docker resources used by this project'
 )
 def clean():
+    exit_code = 0
     with friendly_dockerized_errors(click):
         clean_command = CleanCommand()
-        clean_command.run()
+        exit_code = clean_command.run()
+    click.get_current_context().exit(exit_code)
 
 
 @main.command(
     short_help='Push the \'dockerized\' image'
 )
 def push():
+    exit_code = 0
     with friendly_dockerized_errors(click):
         push_command = PushCommand()
-        push_command.run()
+        exit_code = push_command.run()
+    click.get_current_context().exit(exit_code)
 
 
 @main.command(

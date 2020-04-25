@@ -1,13 +1,10 @@
 import re
 import subprocess
 import os
-import shutil
 import unittest
-import tempfile
 from concurrent.futures.thread import ThreadPoolExecutor
-from typing import List
-from unittest.case import TestCase
-from pathlib import Path
+
+from dockerized.test import ProjectAwareTestCase
 
 # Why?!
 # Because Docker Compose [does not have a proper quiet/silent mode](https://github.com/docker/compose/issues/6026)
@@ -25,17 +22,11 @@ DOCKER_COMPOSE_OUTPUT_REGEX = [
 ]
 
 
-class AbstractEndToEndTest(TestCase):
-    project_dirs: List[str]
-
-    def setUp(self) -> None:
-        self.project_dirs = []
-        self.add_project_dir()
-
+class AbstractEndToEndTest(ProjectAwareTestCase):
     def tearDown(self) -> None:
         for path in self.project_dirs:
             self.run_dockerized('clean', project_dir=path)
-            shutil.rmtree(path)
+        super().tearDown()
 
     def run_dockerized(self, cmd_line, working_dir=None, project_dir=None):
         safe_project_dir = project_dir or self.project_dirs[0]
@@ -59,17 +50,6 @@ class AbstractEndToEndTest(TestCase):
         self.assertEqual(expected_stderr, filtered_stderr)
         self.assertEqual(expected_stdout, filtered_stdout)
         self.assertEqual(expected_exit_code, exit_code)
-
-    def add_project_dir(self):
-        path = tempfile.mkdtemp()
-        self.project_dirs.append(path)
-        return path
-
-    def setup_project_dir(self, fixture_name, project_dir):
-        shutil.rmtree(project_dir)
-
-        this_file_dir = os.path.dirname(os.path.realpath(__file__))
-        shutil.copytree(this_file_dir + '/fixtures/' + fixture_name, project_dir)
 
     def __filter_docker_compose_output(self, output):
         output_str = output.decode('utf-8')

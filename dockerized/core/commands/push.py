@@ -6,4 +6,4 @@ class PushCommand(DockerComposeCommand):
         super().__init__(env, docker_compose)
 
     def run(self):
-        self.docker_compose.push()
+        return self.docker_compose.push()

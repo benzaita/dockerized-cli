@@ -38,6 +38,7 @@ class Project:
                 try:
                     logger.info(f"Preparing {self.project_dir}")
                     self.__prepare()
+                    self.set_prepared(True)
                 finally:
                     logger.info(f"Unlocking {self.lock_dir}")
                     self.__unlock()
@@ -61,5 +62,9 @@ class Project:
         self.env.rmdir(self.lock_dir)
 
     def __prepare(self):
+        exit_code = self.docker_compose.pull()
+        if exit_code != 0:
+            logger.info(f"Pulling the 'dockerized' image exited with code {exit_code}. Ignoring error since we are "
+                        f"going to build the image")
+
         self.docker_compose.run(working_dir=self.project_dir, command='true')
-        self.set_prepared(True)

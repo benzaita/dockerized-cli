@@ -24,10 +24,13 @@ class DockerCompose:
         return exit_code
 
     def down(self):
-        self.execute_command(['down'])
+        return self.execute_command(['down'])
 
     def push(self):
-        self.execute_command(['push', 'dockerized'])
+        return self.execute_command(['push', 'dockerized'])
+
+    def pull(self):
+        return self.execute_command(['pull', 'dockerized'])
 
     def execute_command(self, docker_compose_args):
         # Why not use the Docker Compose API directly?
