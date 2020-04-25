@@ -3,6 +3,7 @@ from pathlib import Path
 
 import click
 
+from dockerized.core.commands.push import PushCommand
 from dockerized.core.commands.version import VersionCommand
 from dockerized.core.commands.compose import ComposeCommand
 from dockerized.core.commands.shell import ShellCommand
@@ -87,6 +88,15 @@ def clean():
     with friendly_dockerized_errors(click):
         clean_command = CleanCommand()
         clean_command.run()
+
+
+@main.command(
+    short_help='Push the \'dockerized\' image'
+)
+def push():
+    with friendly_dockerized_errors(click):
+        push_command = PushCommand()
+        push_command.run()
 
 
 @main.command(
