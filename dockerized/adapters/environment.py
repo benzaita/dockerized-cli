@@ -1,5 +1,6 @@
 import logging
 import os
+import time
 from pathlib import Path
 
 
@@ -23,7 +24,10 @@ class Environment:
         return Path(os.getcwd())
 
     def touch_file(self, path: Path):
-        path.touch(exist_ok=False)
+        path.touch(exist_ok=True)
+
+    def get_file_modification_time(self, path: Path):
+        return time.gmtime(path.stat().st_mtime)
 
     def unlink_file(self, path: Path):
         path.unlink()

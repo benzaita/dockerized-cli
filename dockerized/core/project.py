@@ -14,7 +14,28 @@ class Project:
         self.lock_dir = self.project_dir.joinpath('.dockerized').joinpath('lock')
 
     def is_prepared(self):
-        return self.env.path_exists(self.prepared_flag_path)
+        flag_exists = self.env.path_exists(self.prepared_flag_path)
+        if flag_exists:
+            flag_modification_time = self.env.get_file_modification_time(self.prepared_flag_path)
+
+            composefile_path = self.project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml')
+            composefile_modification_time = self.env.get_file_modification_time(
+                composefile_path)
+            if composefile_modification_time > flag_modification_time:
+                logger.info(f"{composefile_path} has changed since project was prepared")
+                return False
+
+            dockerfile_path = self.project_dir.joinpath('.dockerized').joinpath('Dockerfile.dockerized')
+            if self.env.path_exists(dockerfile_path):
+                dockerfile_modification_time = self.env.get_file_modification_time(
+                    dockerfile_path)
+                if dockerfile_modification_time > flag_modification_time:
+                    logger.info(f"{dockerfile_path} has changed since project was prepared")
+                    return False
+
+            return True
+        else:
+            return False
 
     def set_prepared(self, state):
         if state:
