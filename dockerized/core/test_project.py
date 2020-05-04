@@ -22,6 +22,7 @@ class TestProject(ProjectAwareTestCase):
         self.project.prepare_if_needed()
 
         self.docker_compose_mock.pull.assert_called_once_with()
+        self.docker_compose_mock.build.assert_called_once_with()
         self.docker_compose_mock.run.assert_called_once_with(working_dir=self.project_dir, command='true')
 
     def test_prepare_ignores_pull_errors(self):

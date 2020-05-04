@@ -32,6 +32,9 @@ class DockerCompose:
     def pull(self):
         return self.execute_command(['pull', 'dockerized'])
 
+    def build(self):
+        return self.execute_command(['build', 'dockerized'])
+
     def execute_command(self, docker_compose_args):
         # Why not use the Docker Compose API directly?
         # Because [it is not officially supported](https://github.com/docker/compose/issues/4542#issuecomment-283191533)

@@ -52,3 +52,15 @@ class TestDockerCompose(TestCase):
             'dockerized'
         ], stdout=mock.ANY, stderr=mock.ANY)
 
+    def test_build_executes_build(self):
+        docker_compose = DockerCompose(Path('composefile'), Path('project-dir'))
+        with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
+            docker_compose.build()
+        mock_Popen.assert_called_once_with([
+            'docker-compose',
+            '-f', 'composefile',
+            '--project-name', 'project-dir',
+            'build',
+            'dockerized'
+        ], stdout=mock.ANY, stderr=mock.ANY)
+

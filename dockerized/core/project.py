@@ -88,4 +88,10 @@ class Project:
             logger.info(f"Pulling the 'dockerized' image exited with code {exit_code}. Ignoring error since we are "
                         f"going to build the image")
 
+        # Explicitly running "build" because Docker Compose will not rebuild the image if it already exists, even if the
+        # Dockerfile has changed since the image was built.
+        self.docker_compose.build()
+
+        # Running "run" because there is no other way (at the time of writing) to request Docker Compose to create the
+        # network of that stack.
         self.docker_compose.run(working_dir=self.project_dir, command='true')
