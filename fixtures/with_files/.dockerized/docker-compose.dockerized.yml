@@ -1,0 +1,10 @@
+
+version: '2'
+services:
+  dockerized:
+    build:
+      context: .
+      dockerfile: Dockerfile.dockerized
+    entrypoint:
+      - sh
+      - '-c'
