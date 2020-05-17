@@ -9,7 +9,7 @@ FROM busybox
 """
 
 composefile_content = """
-version: '2'
+version: '3.2'
 services:
   dockerized:
     build:

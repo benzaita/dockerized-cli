@@ -215,7 +215,16 @@ class EndToEndTest(AbstractEndToEndTest):
                         '\n---\n'.join(non_empty_stdouts))
 
         self.assertTrue(len(non_zero_exit_codes) == 0,
-                        f"Expected all exit codes to be zero, got: {','.join(non_zero_exit_codes)}")
+                        f"Expected all exit codes to be zero, got: {','.join(map(str, non_zero_exit_codes))}")
+
+    def test_exec_uses_build_cache(self):
+        self.assert_dockerized(
+            fixture_name='with_build_cache',
+            command='exec true',
+            expected_exit_code=0,
+            expected_stdout_regex=r'.*',
+            expected_stderr_regex=r'\n#\d \[\d/\d\] RUN echo "long operation"\n#\d CACHED\n',
+        )
 
 
 if __name__ == '__main__':

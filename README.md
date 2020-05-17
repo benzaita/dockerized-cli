@@ -1,7 +1,7 @@
 dockerized 🏗❤️
 ================
 
-`dockerized` is a tool for seamlessly executing commands in a container. It takes care of the details so you can run a command in a container as if it was running on your machine - just prepend any command with `dockerized exec` to have it run in the container.
+_dockerized_ is a tool for seamlessly executing commands in a container. It takes care of the details so you can run a command in a container as if it was running on your machine - just prepend any command with `dockerized exec` to have it run in the container.
 
 This is especially useful for building things. For example, if your project needs Java and Maven to build, you can put these build dependencies in a Dockerfile and then just replace `mvn` with `dockerized exec mvn`. If your tests need a Postgresql database to run, add that in a Docker Compose file and just run `dockerized exec mvn test`.
 
@@ -44,3 +44,49 @@ Run `dockerized init` to set up. It will create a Dockerfile and a Docker Compos
 
 Then run `dockerized exec COMMAND` to build the container, start the dependencies, and execute `COMMAND` inside a container.
 
+# Caching the 'dockerized' image
+
+When running in CI _dockerized_ probably runs on a fresh node where the 'dockerized' image is not available yet. Therefore, it needs to build it from scratch. This can be a long process of downloading and installing build dependencies. Doing this over and over again on every fresh node is wasteful.
+
+Let's illustrate this using the following `./dockerized/Dockerfile.dockerized` file:
+
+```Dockerfile
+FROM busybox
+RUN echo "long operation"
+```
+
+Make the following changes to your `./dockerized/docker-compose.dockerized.yml` file:
+
+```yaml
+ version: '3.2'
+ services:
+   dockerized:
++    image: benzaita/dockerized-fixture-with_build_cache
+     build:
+       context: .
+       dockerfile: Dockerfile.dockerized
++      cache_from:
++        - benzaita/dockerized-fixture-with_build_cache
+     entrypoint:
+       - sh
+       - '-c'
+```
+
+_dockerized_ uses Docker's BuildKit which can utilize a build cache. Therefore, Docker will use the cache from `benzaita/dockerized-fixture-with_build_cache` instead of executing the `RUN echo "long operation"` line during build. When you run a command using `dockerized exec` and the `dockerized` image does not exist yet, you can expect the following:
+
+```
+Building dockerized
+...
+ => importing cache manifest from benzaita/dockerized-fixture-with_build_cache          0.0s
+...
+ => CACHED [2/2] RUN echo "long operation"                                              0.0s
+...
+```
+
+## Pushing the cache image
+
+Having a remote cache for the image means you need to decide when to update it -- when to run `dockerized push`.
+
+It is recommended to run `dockerized push` at the end of your CI pipeline. This ensures that (a) the pipeline successfully runs with this `dockerized` image (so you don't push a broken image) and (b) incurs a very small overhead since in most of the builds the Docker image is already up to date and Docker does not push the layers.
+
+Another option is to let the developer run `dockerized push` after they commit a change to the `.dockerized/Dockerfile.dockerized` file. This does not require any automation, but means the developer might forget to do it, rendering the cache out of date.

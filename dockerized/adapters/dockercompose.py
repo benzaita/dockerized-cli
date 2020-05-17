@@ -1,3 +1,4 @@
+import os
 import sys
 import subprocess
 from pathlib import Path
@@ -29,13 +30,17 @@ class DockerCompose:
     def push(self):
         return self.execute_command(['push', 'dockerized'])
 
-    def pull(self):
-        return self.execute_command(['pull', 'dockerized'])
-
     def build(self):
-        return self.execute_command(['build', 'dockerized'])
+        # run "build" with BuildKit to utilize the build cache (the build.cache_from field in the docker-compose file)
+        return self.execute_command(
+            ['build', '--build-arg', 'BUILDKIT_INLINE_CACHE=1', 'dockerized'],
+            env_overrides={
+                'COMPOSE_DOCKER_CLI_BUILD': '1',
+                'DOCKER_BUILDKIT': '1',
+            }
+        )
 
-    def execute_command(self, docker_compose_args):
+    def execute_command(self, docker_compose_args, env_overrides={}):
         # Why not use the Docker Compose API directly?
         # Because [it is not officially supported](https://github.com/docker/compose/issues/4542#issuecomment-283191533)
         args = [
@@ -44,13 +49,18 @@ class DockerCompose:
             '--project-name', str(self.project_dir)
         ]
         args.extend(docker_compose_args)
-        logger.info(f"Running: {args}")
+
+        env = {
+            **os.environ,
+            **env_overrides
+        }
+
+        logger.info(f"Running: {args} with env overrides: {env_overrides}")
         try:
-            process = subprocess.Popen(args, stdout=sys.stdout, stderr=sys.stderr)
+            process = subprocess.Popen(args, stdout=sys.stdout, stderr=sys.stderr, env=env)
             exit_code = process.wait()
         except Exception as e:
             logger.error(f"Raised exception: {e}")
             raise e
         logger.info(f"Finished with exit-code {exit_code}")
         return exit_code
-
