@@ -44,7 +44,7 @@ class TestInitCommand(unittest.TestCase):
         composefile_path = self.temp_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml')
         self.assertTrue(composefile_path.is_file())
         self.assertEqual(composefile_path.read_text(), textwrap.dedent("""
-        version: '2'
+        version: '3.2'
         services:
           dockerized:
             build:
