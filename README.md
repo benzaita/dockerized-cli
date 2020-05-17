@@ -57,7 +57,7 @@ RUN echo "long operation"
 
 Make the following changes to your `./dockerized/docker-compose.dockerized.yml` file:
 
-```yaml
+```diff
  version: '3.2'
  services:
    dockerized:
