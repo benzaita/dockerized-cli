@@ -226,7 +226,7 @@ class EndToEndTest(AbstractEndToEndTest):
             expected_stdout_regex=r'.*',
             expected_stderr_regex=''.join([
                 r'#\d \[\d/\d\] RUN echo "long operation"\n',  # this step
-                r'(#\d pulling .*?\n)?',  # might be pulled (or already available locally)
+                r'(#\d pulling .*?\n)*',  # might be pulled (or already available locally)
                 r'#\d CACHED',  # anyway - it should be cached
             ]),
         )
