@@ -13,23 +13,23 @@ class AbstractEndToEndTest(ProjectAwareTestCase):
             self.run_dockerized('clean', project_dir=path)
         super().tearDown()
 
-    def run_dockerized(self, cmd_line, working_dir=None, project_dir=None):
+    def run_dockerized(self, cmd_line, working_dir=None, project_dir=None, env=None):
         safe_project_dir = project_dir or self.project_dirs[0]
         this_file_path = os.path.dirname(os.path.realpath(__file__))
         dockerized = this_file_path + '/dockerized.py'
         cwd = safe_project_dir if working_dir is None else f"{safe_project_dir}/{working_dir}"
-        process = subprocess.run(f"{dockerized} {cmd_line}", cwd=cwd, shell=True, capture_output=True)
+        process = subprocess.run(f"{dockerized} {cmd_line}", cwd=cwd, shell=True, capture_output=True, env=env)
         return process.returncode, process.stdout, process.stderr
 
     def assert_dockerized(self, command, expected_exit_code=None, fixture_name=None, working_dir=None, project_dir=None,
-                          expected_stderr_regex=None, expected_stdout_regex=None):
+                          expected_stderr_regex=None, expected_stdout_regex=None, env=None):
         safe_project_dir = project_dir or self.project_dirs[0]
         if fixture_name is not None:
             if fixture_name == '_init':
                 self.run_dockerized('init')
             else:
                 self.setup_project_dir(fixture_name, safe_project_dir)
-        exit_code, stdout, stderr = self.run_dockerized(command, working_dir)
+        exit_code, stdout, stderr = self.run_dockerized(command, working_dir, env=env)
 
         self.assertRegex(stderr.decode('utf-8'), re.compile(expected_stderr_regex, re.MULTILINE))
         self.assertRegex(stdout.decode('utf-8'), re.compile(expected_stdout_regex, re.MULTILINE))
@@ -221,12 +221,13 @@ class EndToEndTest(AbstractEndToEndTest):
         self.assert_dockerized(
             fixture_name='with_build_cache',
             command='exec true',
+            env={**os.environ, 'DOCKERIZED_BUILD_CACHE': '1'},
             expected_exit_code=0,
             expected_stdout_regex=r'.*',
             expected_stderr_regex=''.join([
                 r'#\d \[\d/\d\] RUN echo "long operation"\n',  # this step
-                r'(#\d pulling .*?\n)?',                       # might be pulled (or already available locally)
-                r'#\d CACHED',                                 # anyway - it should be cached
+                r'(#\d pulling .*?\n)?',  # might be pulled (or already available locally)
+                r'#\d CACHED',  # anyway - it should be cached
             ]),
         )
 
