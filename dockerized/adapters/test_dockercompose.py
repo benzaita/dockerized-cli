@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from unittest import TestCase
 from unittest import mock
@@ -44,6 +45,19 @@ class TestDockerCompose(TestCase):
         docker_compose = DockerCompose(Path('composefile'), Path('project-dir'))
         with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
             docker_compose.build()
+        mock_Popen.assert_called_once_with([
+            'docker-compose',
+            '-f', 'composefile',
+            '--project-name', 'project-dir',
+            'build',
+            'dockerized'
+        ], stdout=mock.ANY, stderr=mock.ANY, env=mock.ANY)
+
+    def test_build_executes_build_when_DOCKERIZED_BUILD_CACHE_is_1(self):
+        docker_compose = DockerCompose(Path('composefile'), Path('project-dir'))
+        with mock.patch.dict(os.environ, {'DOCKERIZED_BUILD_CACHE': '1'}):
+            with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
+                docker_compose.build()
         mock_Popen.assert_called_once_with([
             'docker-compose',
             '-f', 'composefile',
