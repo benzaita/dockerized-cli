@@ -85,8 +85,13 @@ class Project:
         self.env.rmdir(self.lock_dir)
 
     def __prepare(self):
-        self.docker_compose.pull()
+        exit_code = self.docker_compose.pull()
+        if exit_code != 0:
+            logger.info(f"Pulling the 'dockerized' image exited with code {exit_code}. Ignoring error since we are "
+                        f"going to build the image")
 
+        # Explicitly running "build" because Docker Compose will not rebuild the image if it already exists, even if the
+        # Dockerfile has changed since the image was built.
         exit_code = self.docker_compose.build()
         if exit_code != 0:
             raise DockerizedError("Failed to prepare: docker-compose build failed")

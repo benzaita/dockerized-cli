@@ -1,4 +1,3 @@
-import os
 import sys
 import subprocess
 from pathlib import Path
@@ -27,16 +26,16 @@ class DockerCompose:
     def down(self):
         return self.execute_command(['down'])
 
-    def pull(self):
-        return self.execute_command(['pull', 'dockerized'])
-
     def push(self):
         return self.execute_command(['push', 'dockerized'])
+
+    def pull(self):
+        return self.execute_command(['pull', 'dockerized'])
 
     def build(self):
         return self.execute_command(['build', 'dockerized'])
 
-    def execute_command(self, docker_compose_args, env_overrides={}):
+    def execute_command(self, docker_compose_args):
         # Why not use the Docker Compose API directly?
         # Because [it is not officially supported](https://github.com/docker/compose/issues/4542#issuecomment-283191533)
         args = [
@@ -45,15 +44,9 @@ class DockerCompose:
             '--project-name', str(self.project_dir)
         ]
         args.extend(docker_compose_args)
-
-        env = {
-            **os.environ,
-            **env_overrides
-        }
-
-        logger.info(f"Running: {args} with env overrides: {env_overrides}")
+        logger.info(f"Running: {args}")
         try:
-            process = subprocess.Popen(args, stdout=sys.stdout, stderr=sys.stderr, env=env)
+            process = subprocess.Popen(args, stdout=sys.stdout, stderr=sys.stderr)
             exit_code = process.wait()
         except Exception as e:
             logger.error(f"Raised exception: {e}")
