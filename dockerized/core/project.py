@@ -1,6 +1,8 @@
 import logging
 import time
 
+from dockerized.core.errors import DockerizedError
+
 logger = logging.getLogger(__name__)
 
 
@@ -90,7 +92,9 @@ class Project:
 
         # Explicitly running "build" because Docker Compose will not rebuild the image if it already exists, even if the
         # Dockerfile has changed since the image was built.
-        self.docker_compose.build()
+        exit_code = self.docker_compose.build()
+        if exit_code != 0:
+            raise DockerizedError("Failed to prepare: docker-compose build failed")
 
         # Running "run" because there is no other way (at the time of writing) to request Docker Compose to create the
         # network of that stack.

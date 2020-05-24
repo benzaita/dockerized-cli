@@ -13,23 +13,23 @@ class AbstractEndToEndTest(ProjectAwareTestCase):
             self.run_dockerized('clean', project_dir=path)
         super().tearDown()
 
-    def run_dockerized(self, cmd_line, working_dir=None, project_dir=None):
+    def run_dockerized(self, cmd_line, working_dir=None, project_dir=None, env=None):
         safe_project_dir = project_dir or self.project_dirs[0]
         this_file_path = os.path.dirname(os.path.realpath(__file__))
         dockerized = this_file_path + '/dockerized.py'
         cwd = safe_project_dir if working_dir is None else f"{safe_project_dir}/{working_dir}"
-        process = subprocess.run(f"{dockerized} {cmd_line}", cwd=cwd, shell=True, capture_output=True)
+        process = subprocess.run(f"{dockerized} {cmd_line}", cwd=cwd, shell=True, capture_output=True, env=env)
         return process.returncode, process.stdout, process.stderr
 
     def assert_dockerized(self, command, expected_exit_code=None, fixture_name=None, working_dir=None, project_dir=None,
-                          expected_stderr_regex=None, expected_stdout_regex=None):
+                          expected_stderr_regex=None, expected_stdout_regex=None, env=None):
         safe_project_dir = project_dir or self.project_dirs[0]
         if fixture_name is not None:
             if fixture_name == '_init':
                 self.run_dockerized('init')
             else:
                 self.setup_project_dir(fixture_name, safe_project_dir)
-        exit_code, stdout, stderr = self.run_dockerized(command, working_dir)
+        exit_code, stdout, stderr = self.run_dockerized(command, working_dir, env=env)
 
         self.assertRegex(stderr.decode('utf-8'), re.compile(expected_stderr_regex, re.MULTILINE))
         self.assertRegex(stdout.decode('utf-8'), re.compile(expected_stdout_regex, re.MULTILINE))
@@ -215,7 +215,20 @@ class EndToEndTest(AbstractEndToEndTest):
                         '\n---\n'.join(non_empty_stdouts))
 
         self.assertTrue(len(non_zero_exit_codes) == 0,
-                        f"Expected all exit codes to be zero, got: {','.join(non_zero_exit_codes)}")
+                        f"Expected all exit codes to be zero, got: {','.join(map(str, non_zero_exit_codes))}")
+
+    def test_exec_uses_build_cache(self):
+        subprocess.run('docker rmi benzaita/dockerized-fixture-with_build_cache:latest', shell=True)
+        self.assert_dockerized(
+            fixture_name='with_build_cache',
+            command='--loglevel INFO exec true',
+            expected_exit_code=0,
+            expected_stdout_regex=''.join([
+                r'Step 2/2 : RUN echo "long operation"\n',
+                r' ---> Using cache\n',
+            ]),
+            expected_stderr_regex=r'.*',
+        )
 
 
 if __name__ == '__main__':

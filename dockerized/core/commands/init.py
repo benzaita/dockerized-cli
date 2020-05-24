@@ -9,12 +9,17 @@ FROM busybox
 """
 
 composefile_content = """
-version: '2'
+version: '3.2'
 services:
   dockerized:
+    # to enable caching, uncomment and set this:
+    # image: <IMAGE_IDENTIFIER>
     build:
       context: .
       dockerfile: Dockerfile.dockerized
+      # to enable caching, uncomment and set this:
+      # cache_from:
+      #   - <IMAGE_IDENTIFIER>
     entrypoint:
       - sh
       - '-c'
