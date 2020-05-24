@@ -218,17 +218,16 @@ class EndToEndTest(AbstractEndToEndTest):
                         f"Expected all exit codes to be zero, got: {','.join(map(str, non_zero_exit_codes))}")
 
     def test_exec_uses_build_cache(self):
+        subprocess.run('docker rmi benzaita/dockerized-fixture-with_build_cache:latest', shell=True)
         self.assert_dockerized(
             fixture_name='with_build_cache',
-            command='exec true',
-            env={**os.environ, 'DOCKERIZED_BUILD_CACHE': '1'},
+            command='--loglevel INFO exec true',
             expected_exit_code=0,
-            expected_stdout_regex=r'.*',
-            expected_stderr_regex=''.join([
-                r'#\d \[\d/\d\] RUN echo "long operation"\n',  # this step
-                r'(#\d pulling .*?\n)*',  # might be pulled (or already available locally)
-                r'#\d CACHED',  # anyway - it should be cached
+            expected_stdout_regex=''.join([
+                r'Step 2/2 : RUN echo "long operation"\n',
+                r' ---> Using cache\n',
             ]),
+            expected_stderr_regex=r'.*',
         )
 
 

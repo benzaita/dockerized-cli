@@ -41,6 +41,18 @@ class TestDockerCompose(TestCase):
             'dockerized'
         ], stdout=mock.ANY, stderr=mock.ANY, env=mock.ANY)
 
+    def test_push_executes_pull(self):
+        docker_compose = DockerCompose(Path('composefile'), Path('project-dir'))
+        with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
+            docker_compose.pull()
+        mock_Popen.assert_called_once_with([
+            'docker-compose',
+            '-f', 'composefile',
+            '--project-name', 'project-dir',
+            'pull',
+            'dockerized'
+        ], stdout=mock.ANY, stderr=mock.ANY, env=mock.ANY)
+
     def test_build_executes_build(self):
         docker_compose = DockerCompose(Path('composefile'), Path('project-dir'))
         with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
@@ -52,27 +64,3 @@ class TestDockerCompose(TestCase):
             'build',
             'dockerized'
         ], stdout=mock.ANY, stderr=mock.ANY, env=mock.ANY)
-
-    def test_build_executes_build_when_DOCKERIZED_BUILD_CACHE_is_1(self):
-        docker_compose = DockerCompose(Path('composefile'), Path('project-dir'))
-        with mock.patch.dict(os.environ, {'DOCKERIZED_BUILD_CACHE': '1'}):
-            with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
-                docker_compose.build()
-        mock_Popen.assert_called_once_with([
-            'docker-compose',
-            '-f', 'composefile',
-            '--project-name', 'project-dir',
-            'build',
-            '--build-arg',
-            'BUILDKIT_INLINE_CACHE=1',
-            'dockerized'
-        ], stdout=mock.ANY, stderr=mock.ANY, env=mock.ANY)
-        self.assertTrue(
-            set({
-                'COMPOSE_DOCKER_CLI_BUILD': '1',
-                'DOCKER_BUILDKIT': '1',
-            }.items()).issubset(
-                set(mock_Popen.call_args[1]['env'].items())
-            )
-        )
-

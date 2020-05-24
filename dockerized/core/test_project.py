@@ -32,6 +32,12 @@ class TestProject(ProjectAwareTestCase):
         self.project.set_prepared(False)
         self.assertRaises(DockerizedError, lambda: self.project.prepare_if_needed())
 
+    def test_prepare_does_not_raise_error_if_pull_fails(self):
+        self.docker_compose_mock.pull = MagicMock(return_value=1)
+
+        self.project.set_prepared(False)
+        self.project.prepare_if_needed()
+
     def test_prepare_does_not_runs_if_not_needed(self):
         self.project.set_prepared(True)
         self.project.prepare_if_needed()

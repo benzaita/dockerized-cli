@@ -27,22 +27,14 @@ class DockerCompose:
     def down(self):
         return self.execute_command(['down'])
 
+    def pull(self):
+        return self.execute_command(['pull', 'dockerized'])
+
     def push(self):
         return self.execute_command(['push', 'dockerized'])
 
     def build(self):
-        if self.__use_build_cache():
-            # run "build" with BuildKit to utilize the build cache (the build.cache_from field in the
-            # docker-compose file)
-            return self.execute_command(
-                ['build', '--build-arg', 'BUILDKIT_INLINE_CACHE=1', 'dockerized'],
-                env_overrides={
-                    'COMPOSE_DOCKER_CLI_BUILD': '1',
-                    'DOCKER_BUILDKIT': '1',
-                }
-            )
-        else:
-            return self.execute_command(['build', 'dockerized'])
+        return self.execute_command(['build', 'dockerized'])
 
     def execute_command(self, docker_compose_args, env_overrides={}):
         # Why not use the Docker Compose API directly?
@@ -69,5 +61,3 @@ class DockerCompose:
         logger.info(f"Finished with exit-code {exit_code}")
         return exit_code
 
-    def __use_build_cache(self):
-        return os.getenv('DOCKERIZED_BUILD_CACHE') == '1'

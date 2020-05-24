@@ -72,14 +72,14 @@ Make the following changes to your `./dockerized/docker-compose.dockerized.yml` 
        - '-c'
 ```
 
-_dockerized_ uses Docker's BuildKit which can utilize a build cache. Therefore, Docker will use the cache from `benzaita/dockerized-fixture-with_build_cache` instead of executing the `RUN echo "long operation"` line during build. When you run a command using `dockerized exec` and the `dockerized` image does not exist yet, you can expect the following:
+_dockerized_ first tries to pulls the `dockerized` image before building it so Docker can utilize it. If the image was built using the same Dockerfile, Docker will use the cache from `benzaita/dockerized-fixture-with_build_cache` instead of executing the `RUN echo "long operation"` line during build. When you run a command using `dockerized exec` you can expect the following:
 
 ```
+Pulling dockerized ... done
 Building dockerized
 ...
- => importing cache manifest from benzaita/dockerized-fixture-with_build_cache          0.0s
-...
- => CACHED [2/2] RUN echo "long operation"                                              0.0s
+Step 2/2 : RUN echo "long operation"
+ ---> Using cache
 ...
 ```
 

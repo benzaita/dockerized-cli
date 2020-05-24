@@ -85,6 +85,8 @@ class Project:
         self.env.rmdir(self.lock_dir)
 
     def __prepare(self):
+        self.docker_compose.pull()
+
         exit_code = self.docker_compose.build()
         if exit_code != 0:
             raise DockerizedError("Failed to prepare: docker-compose build failed")
