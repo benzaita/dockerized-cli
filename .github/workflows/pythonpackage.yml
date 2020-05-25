@@ -7,12 +7,10 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.7]
-
     steps:
     - uses: actions/checkout@v2
     - name: Build metadata
@@ -30,11 +28,16 @@ jobs:
     - name: Test
       run: |
         pipenv run invoke test
+
+  dist:
+    needs: [build]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
     - name: Prepare distribution
       run: |
         pipenv run invoke dist
     - name: Publish (test PyPi)
-      if: contains(github.ref, 'refs/tags/v')
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.test_pypi_apikey }}
@@ -42,12 +45,10 @@ jobs:
          pip install twine
          python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
     - name: Install (test PyPi)
-      if: contains(github.ref, 'refs/tags/v')
       run: |
          pip install --index-url https://test.pypi.org/simple/ dockerized
          dockerized version
     - name: Publish (PyPi)
-      if: contains(github.ref, 'refs/tags/v')
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.pypi_apikey }}
@@ -55,7 +56,6 @@ jobs:
         pip install twine
         python -m twine upload dist/*
     - name: Install (PyPi)
-      if: contains(github.ref, 'refs/tags/v')
       run: |
         pip install dockerized
         dockerized version
