@@ -15,6 +15,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Build metadata
+      run: |
+        echo "GITHUB_REF=$GITHUB_REF"
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -31,7 +34,7 @@ jobs:
       run: |
         pipenv run invoke dist
     - name: Publish (test PyPi)
-      if: github.ref == 'master'
+      if: contains(github.ref, 'refs/tags/v')
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.test_pypi_apikey }}
@@ -39,12 +42,12 @@ jobs:
          pip install twine
          python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
     - name: Install (test PyPi)
-      if: github.ref == 'master'
+      if: contains(github.ref, 'refs/tags/v')
       run: |
          pip install --index-url https://test.pypi.org/simple/ dockerized
          dockerized version
     - name: Publish (PyPi)
-      if: github.ref == 'master'
+      if: contains(github.ref, 'refs/tags/v')
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.pypi_apikey }}
@@ -52,7 +55,7 @@ jobs:
         pip install twine
         python -m twine upload dist/*
     - name: Install (PyPi)
-      if: github.ref == 'master'
+      if: contains(github.ref, 'refs/tags/v')
       run: |
         pip install dockerized
         dockerized version
