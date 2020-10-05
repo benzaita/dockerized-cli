@@ -1,0 +1,23 @@
+
+version: '3.2'
+services:
+  dockerized:
+    # to enable caching, uncomment and set this:
+    # image: <IMAGE_IDENTIFIER>
+    build:
+      context: .
+      dockerfile: Dockerfile.dockerized
+      # to enable caching, uncomment and set this:
+      # cache_from:
+      #   - <IMAGE_IDENTIFIER>
+    entrypoint:
+      - sh
+      - '-c'
+    volumes:
+      # cache installed packages and (including scripts) in a volume
+      - site-packages:/usr/local/lib/python3.8/site-packages
+      - local-bin:/usr/local/bin
+
+volumes:
+  site-packages: {}
+  local-bin: {}
