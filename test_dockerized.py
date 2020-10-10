@@ -201,7 +201,7 @@ class EndToEndTest(AbstractEndToEndTest):
 
         non_zero_exit_codes = [c for c in exit_codes if c != 0]
         non_empty_stdouts = [s for s in stdouts if len(s) > 0]
-        non_empty_stderrs = [s for s in stderrs if len(s) > 0]
+        non_empty_stderrs = [s for s in stderrs if re.search(r'Creating network', s) is not None]
 
         self.assertTrue(len(non_empty_stderrs) == 1,
                         f"Expected only one STDERR to be not empty, got {len(non_empty_stderrs)}:\n" +
