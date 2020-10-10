@@ -227,6 +227,14 @@ class EndToEndTest(AbstractEndToEndTest):
             expected_stderr_regex=r'.*',
         )
 
+    def test_allows_config_file(self):
+        self.assert_dockerized(
+            fixture_name='with_config',
+            command='exec true',
+            expected_exit_code=0,
+            expected_stdout_regex=r'.*',
+            expected_stderr_regex=r'.*',
+        )
 
 if __name__ == '__main__':
     unittest.main()

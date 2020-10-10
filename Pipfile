@@ -12,6 +12,7 @@ pipenv-setup = "*"
 
 [packages]
 click = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.7"

@@ -20,10 +20,12 @@ class DockerComposeCommand:
         if self.project_dir is None:
             raise CommandError("Not inside a Dockerized project directory. Did you run 'dockerized init'?")
 
-        self.config = Config(self.project_dir, {
-            'compose_files': ['./docker-compose.dockerized.yml'],
-            'service_name': 'dockerized'
-        })
+        config_file = self.project_dir.joinpath('.dockerized').joinpath('config.yml') 
+        if config_file.exists():
+            self.config = Config.fromYamlFile(config_file)
+        else:
+            logger.info(f"Configuration file ({str(config_file)}) does not exist. Using defaults.")
+            self.config = Config.default(self.project_dir)
 
         self.docker_compose = docker_compose or DockerCompose(
             compose_files=self.config.compose_files(),
@@ -32,4 +34,3 @@ class DockerComposeCommand:
         )
 
         self.project = Project(project_dir=self.project_dir, env=self.env, docker_compose=self.docker_compose)
-
