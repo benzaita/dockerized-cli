@@ -8,8 +8,8 @@ logger = logging.getLogger(__name__)
 
 
 class DockerCompose:
-    def __init__(self, composefiles: List[Path], project_dir: Path, service_name: str):
-        self.composefiles = composefiles
+    def __init__(self, compose_files: List[Path], project_dir: Path, service_name: str):
+        self.compose_files = compose_files
         self.project_dir = project_dir
         self.service_name = service_name
 
@@ -42,7 +42,7 @@ class DockerCompose:
         # Because [it is not officially supported](https://github.com/docker/compose/issues/4542#issuecomment-283191533)
         args = [
             'docker-compose',
-            *self.__get_compose_filename_args(self.composefiles),
+            *self.__get_compose_filename_args(self.compose_files),
             '--project-name', str(self.project_dir)
         ]
         args.extend(docker_compose_args)
@@ -56,9 +56,9 @@ class DockerCompose:
         logger.info(f"Finished with exit-code {exit_code}")
         return exit_code
 
-    def __get_compose_filename_args(self, composefiles: List[Path]):
+    def __get_compose_filename_args(self, compose_files: List[Path]):
         args = []
-        for file in composefiles:
+        for file in compose_files:
             args.append('-f')
             args.append(str(file))
         return args
