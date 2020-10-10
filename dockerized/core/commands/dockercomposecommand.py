@@ -22,7 +22,8 @@ class DockerComposeCommand:
 
         self.docker_compose = docker_compose or DockerCompose(
             composefile=self.project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml'),
-            project_dir=self.project_dir
+            project_dir=self.project_dir,
+            service_name='dockerized'
         )
 
         self.project = Project(project_dir=self.project_dir, env=self.env, docker_compose=self.docker_compose)

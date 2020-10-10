@@ -7,9 +7,10 @@ logger = logging.getLogger(__name__)
 
 
 class DockerCompose:
-    def __init__(self, composefile: Path, project_dir: Path):
+    def __init__(self, composefile: Path, project_dir: Path, service_name: str):
         self.composefile = composefile
         self.project_dir = project_dir
+        self.service_name = service_name
 
     def run(self, working_dir: Path, command: str):
         docker_compose_args = [
@@ -17,7 +18,7 @@ class DockerCompose:
             '--rm',
             '-v', f"{str(self.project_dir)}:{str(self.project_dir)}",
             '-w', str(working_dir),
-            'dockerized',
+            self.service_name,
             command
         ]
         exit_code = self.execute_command(docker_compose_args)
@@ -27,13 +28,13 @@ class DockerCompose:
         return self.execute_command(['down'])
 
     def push(self):
-        return self.execute_command(['push', 'dockerized'])
+        return self.execute_command(['push', self.service_name])
 
     def pull(self):
-        return self.execute_command(['pull', 'dockerized'])
+        return self.execute_command(['pull', self.service_name])
 
     def build(self):
-        return self.execute_command(['build', 'dockerized'])
+        return self.execute_command(['build', self.service_name])
 
     def execute_command(self, docker_compose_args):
         # Why not use the Docker Compose API directly?
