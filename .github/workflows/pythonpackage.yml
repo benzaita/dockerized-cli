@@ -53,7 +53,7 @@ jobs:
          python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
     - name: Install (test PyPi)
       run: |
-         pip install --index-url https://test.pypi.org/simple/ dockerized
+         pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple dockerized
          dockerized version
     - name: Publish (PyPi)
       env:
