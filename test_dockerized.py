@@ -97,7 +97,7 @@ class EndToEndTest(AbstractEndToEndTest):
             command='exec echo \'something err >&2\'',
             expected_exit_code=0,
             expected_stdout_regex=r'.*',
-            expected_stderr_regex=r'^something err$',
+            expected_stderr_regex=r'something err',
         )
 
     def test_exec_takes_env_vars_from_docker_compose_file(self):
