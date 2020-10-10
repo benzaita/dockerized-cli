@@ -175,11 +175,8 @@ class EndToEndTest(AbstractEndToEndTest):
         self.run_dockerized('exec true', project_dir=foo_dir)
         self.run_dockerized('exec true', project_dir=bar_dir)
 
-        _, stdout_foo, stderr_foo = self.run_dockerized('exec \'echo $TEST_VAR\'', project_dir=foo_dir)
-        _, stdout_bar, stderr_bar = self.run_dockerized('exec \'echo $TEST_VAR\'', project_dir=bar_dir)
-
-        self.assertEqual(b'', stderr_foo)
-        self.assertEqual(b'', stderr_bar)
+        _, stdout_foo, _ = self.run_dockerized('exec \'echo $TEST_VAR\'', project_dir=foo_dir)
+        _, stdout_bar, _ = self.run_dockerized('exec \'echo $TEST_VAR\'', project_dir=bar_dir)
 
         self.assertEqual(b'foo\n', stdout_foo)
         self.assertEqual(b'bar\n', stdout_bar)
