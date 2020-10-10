@@ -2,12 +2,12 @@
 version: '3.2'
 services:
   dockerized:
-    image: benzaita/dockerized-fixture-with_build_cache:latest
+    image: docker.pkg.github.com/benzaita/dockerized-cli/fixture-with_build_cache:latest
     build:
       context: .
       dockerfile: Dockerfile.dockerized
       cache_from:
-        - benzaita/dockerized-fixture-with_build_cache:latest
+        - docker.pkg.github.com/benzaita/dockerized-cli/fixture-with_build_cache:latest
     entrypoint:
       - sh
       - '-c'

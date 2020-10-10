@@ -215,7 +215,7 @@ class EndToEndTest(AbstractEndToEndTest):
                         f"Expected all exit codes to be zero, got: {','.join(map(str, non_zero_exit_codes))}")
 
     def test_exec_uses_build_cache(self):
-        subprocess.run('docker rmi benzaita/dockerized-fixture-with_build_cache:latest', shell=True)
+        subprocess.run('docker rmi docker.pkg.github.com/benzaita/dockerized-cli/fixture-with_build_cache:latest', shell=True)
         self.assert_dockerized(
             fixture_name='with_build_cache',
             command='--loglevel INFO exec true',
