@@ -224,7 +224,7 @@ class EndToEndTest(AbstractEndToEndTest):
                 r'Step 2/2 : RUN echo "long operation"\n',
                 r' ---> Using cache\n',
             ]),
-            expected_stderr_regex=r'.*',
+            expected_stderr_regex=r'Pulling dockerized',
         )
 
     def test_allows_config_file(self):
