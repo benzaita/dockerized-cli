@@ -21,7 +21,7 @@ class DockerComposeCommand:
             raise CommandError("Not inside a Dockerized project directory. Did you run 'dockerized init'?")
 
         self.docker_compose = docker_compose or DockerCompose(
-            composefile=self.project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml'),
+            composefiles=[self.project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml')],
             project_dir=self.project_dir,
             service_name='dockerized'
         )

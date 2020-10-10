@@ -17,7 +17,7 @@ class TestCleanCommand(unittest.TestCase):
         env.get_project_dir = MagicMock(return_value=project_dir)
         env.get_working_dir = MagicMock(return_value=working_dir)
 
-        docker_compose = DockerCompose(Path(composefile='compose-file'), project_dir=project_dir, service_name='dockerized')
+        docker_compose = DockerCompose(composefiles=[Path('compose-file')], project_dir=project_dir, service_name='dockerized')
         docker_compose.execute_command = MagicMock()
 
         compose_command = ComposeCommand(args, env=env, docker_compose=docker_compose)
