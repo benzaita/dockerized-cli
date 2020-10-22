@@ -45,6 +45,11 @@ Python 3.9.0
 
 See the [examples directory](examples/).
 
+# Advanced Topics
+
+ - [Caching the dockerized image](https://github.com/benzaita/dockerized-cli/wiki/Caching-the-'dockerized'-image)
+ - [Using environment variables](https://github.com/benzaita/dockerized-cli/wiki/Environment-Variables)
+
 # FAQ
 
 ## Why not `docker run` or `docker exec`?
@@ -66,50 +71,3 @@ With _dockerized_ you just do `dockerized exec`.
 **"Port contamination":** many people run their tests on the host, against dependencies (think PostgreSQL for example) running in containers. Since the tests need to access the PostgreSQL port, they expose this port to the host. When you are working on multiple projects these exposed ports start conflicting and you have to `docker-compose stop` one project before `docker-compose start` the other.
 
 With _dockerized_ you just do `dockerized exec`.
-
-# Caching the 'dockerized' image
-
-When running in CI _dockerized_ probably runs on a fresh node where the 'dockerized' image is not available yet. Therefore, it needs to build it from scratch. This can be a long process of downloading and installing build dependencies. Doing this over and over again on every fresh node is wasteful.
-
-Let's illustrate this using the following `./dockerized/Dockerfile.dockerized` file:
-
-```Dockerfile
-FROM busybox
-RUN echo "long operation"
-```
-
-Make the following changes to your `./dockerized/docker-compose.dockerized.yml` file:
-
-```diff
- version: '3.2'
- services:
-   dockerized:
-+    image: benzaita/dockerized-fixture-with_build_cache
-     build:
-       context: .
-       dockerfile: Dockerfile.dockerized
-+      cache_from:
-+        - benzaita/dockerized-fixture-with_build_cache
-     entrypoint:
-       - sh
-       - '-c'
-```
-
-_dockerized_ first tries to pulls the `dockerized` image before building it so Docker can utilize it. If the image was built using the same Dockerfile, Docker will use the cache from `benzaita/dockerized-fixture-with_build_cache` instead of executing the `RUN echo "long operation"` line during build. When you run a command using `dockerized exec` you can expect the following:
-
-```
-Pulling dockerized ... done
-Building dockerized
-...
-Step 2/2 : RUN echo "long operation"
- ---> Using cache
-...
-```
-
-## Pushing the cache image
-
-Having a remote cache for the image means you need to decide when to update it -- when to run `dockerized push`.
-
-It is recommended to run `dockerized push` at the end of your CI pipeline. This ensures that (a) the pipeline successfully runs with this `dockerized` image (so you don't push a broken image) and (b) incurs a very small overhead since in most of the builds the Docker image is already up to date and Docker does not push the layers.
-
-Another option is to let the developer run `dockerized push` after they commit a change to the `.dockerized/Dockerfile.dockerized` file. This does not require any automation, but means the developer might forget to do it, rendering the cache out of date.
