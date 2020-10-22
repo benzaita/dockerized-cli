@@ -41,7 +41,13 @@ $ dockerized shell
 Python 3.9.0
 ```
 
-### Why not `docker run` or `docker exec`?
+# Examples
+
+See the [examples directory](examples/).
+
+# FAQ
+
+## Why not `docker run` or `docker exec`?
 
 Fair question! After all _dockerized_ is just a wrapper for Docker. You can definitely use `docker run` or `docker exec` but there are a few details you'd have to take care of:
 
