@@ -1,6 +1,8 @@
 dockerized 🏗❤️
 ================
 
+Easily Docker-ize your build/development environment and seamlessly run commands inside it.
+
 _dockerized_ is a tool for seamlessly executing commands in a container. It takes care of the details so you can run a command in a container as if it was running on your machine - just prepend any command with `dockerized exec` to have it run in the container.
 
 This is especially useful for building things. For example, if your project needs Java and Maven to build, you can put these build dependencies in a Dockerfile and then just replace `mvn` with `dockerized exec mvn`. If your tests need a Postgresql database to run, add that in a Docker Compose file and just run `dockerized exec mvn test`.
@@ -11,6 +13,33 @@ That approach encourages versioning the build dependencies _alongside_ the appli
 * Never again your build dependencies managed in another repo which falls out of sync with your code.
 
 Your build dependencies are part of your project!
+
+# Getting Started
+
+Install _dockerized_:
+```shell
+$ pip install dockerized
+```
+
+Initialize your environment:
+```shell
+$ dockerized init
+$ echo FROM python:3.9 > .dockerized/Dockerfile.dockerized
+```
+
+Then run a command inside that environment:
+```shell
+$ dockerized exec python --version
+...
+Python 3.9.0
+```
+
+Or drop into an interactive shell inside the environment:
+```shell
+$ dockerized shell
+# python --version
+Python 3.9.0
+```
 
 ### Why not `docker run` or `docker exec`?
 
@@ -31,18 +60,6 @@ With _dockerized_ you just do `dockerized exec`.
 **"Port contamination":** many people run their tests on the host, against dependencies (think PostgreSQL for example) running in containers. Since the tests need to access the PostgreSQL port, they expose this port to the host. When you are working on multiple projects these exposed ports start conflicting and you have to `docker-compose stop` one project before `docker-compose start` the other.
 
 With _dockerized_ you just do `dockerized exec`.
-
-# Getting Started
-
-Install _dockerized_:
-
-```
-pip install dockerized
-```
-
-Run `dockerized init` to set up. It will create a Dockerfile and a Docker Compose file for you. You can tweak those to set up your build dependencies.
-
-Then run `dockerized exec COMMAND` to build the container, start the dependencies, and execute `COMMAND` inside a container.
 
 # Caching the 'dockerized' image
 
