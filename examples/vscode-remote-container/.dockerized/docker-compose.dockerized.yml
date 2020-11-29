@@ -1,7 +1,10 @@
-version: '3'
 
+version: '3.2'
 services:
-  app:
+  dockerized:
+    build:
+      context: .
+      dockerfile: ../.devcontainer/Dockerfile
     entrypoint:
       - sh
       - '-c'
