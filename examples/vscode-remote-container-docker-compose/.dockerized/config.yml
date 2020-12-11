@@ -1,4 +1,0 @@
-compose_files:
-    - ../.devcontainer/docker-compose.yml
-    - ./docker-compose.dockerized.yml
-service_name: app
