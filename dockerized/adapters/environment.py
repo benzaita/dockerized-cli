@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+import subprocess
 from pathlib import Path
 
 
@@ -43,3 +44,7 @@ class Environment:
 
     def rmdir(self, path: Path):
         path.rmdir()
+
+    def clone_dockerized_from_git(self, url: str, dest: Path):
+        subprocess.run(['git', 'clone', url, '--depth', '1', dest], check=True)
+        subprocess.run(['rm', '-rf', dest.joinpath('.git')], check=True)

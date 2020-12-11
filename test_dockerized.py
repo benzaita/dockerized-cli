@@ -46,6 +46,14 @@ class EndToEndTest(AbstractEndToEndTest):
             expected_stderr_regex=r'.*'
         )
 
+    def test_init_from(self):
+        self.assert_dockerized(
+            command='init --from https://github.com/benzaita/dockerized-example-golang.git',
+            expected_exit_code=0,
+            expected_stdout_regex=r'^initialized .dockerized/ from https://github.com/benzaita/dockerized-example-golang.git',
+            expected_stderr_regex=r'^$'
+        )
+
     def test_init_fails(self):
         self.run_dockerized('init')
         self.assert_dockerized(

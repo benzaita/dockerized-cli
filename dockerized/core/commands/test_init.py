@@ -3,10 +3,11 @@ import unittest
 import tempfile
 from pathlib import Path
 from shutil import rmtree
+from unittest.mock import MagicMock
 
 from dockerized.core.commands.init import InitCommand
 from dockerized.core.commands.errors import CommandError
-
+from dockerized.adapters.environment import Environment
 
 class TestInitCommand(unittest.TestCase):
     temp_dir: Path
@@ -69,6 +70,15 @@ class TestInitCommand(unittest.TestCase):
             lock
             prepared
             """))
+
+    def test_uses_from_spec(self):
+        env = MagicMock(spec=Environment)
+        env.clone_dockerized_from_git = MagicMock()
+
+        init_command = InitCommand(self.temp_dir, from_spec='from-url', env=env)
+        init_command.run()
+
+        env.clone_dockerized_from_git.assert_called_with('from-url', self.temp_dir)
 
 
 if __name__ == '__main__':

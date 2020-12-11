@@ -1,7 +1,10 @@
 from pathlib import Path
+import logging
 
 from dockerized.adapters.environment import Environment
 from dockerized.core.commands.errors import CommandError
+
+logger = logging.getLogger(__name__)
 
 dockerfile_content = """
 FROM busybox
@@ -34,21 +37,28 @@ prepared
 class InitCommand:
     project_dir: Path
 
-    def __init__(self, project_dir, env=None):
+    def __init__(self, project_dir, from_spec=None, env=None):
         self.env = env or Environment()
         self.project_dir = project_dir
+        self.from_spec = from_spec
 
     def run(self):
-        try:
-            self.env.mkdir(self.project_dir.joinpath('.dockerized'))
-        except FileExistsError:
-            raise CommandError('Refusing to overwrite .dockerized')
+        dockerized_dir = self.project_dir.joinpath('.dockerized')
 
-        dockerfile_path = self.project_dir.joinpath('.dockerized').joinpath('Dockerfile.dockerized')
-        self.env.write_file(dockerfile_path, dockerfile_content)
+        if self.from_spec:
+          logger.info(f"Initializing from {self.from_spec}")
+          self.env.clone_dockerized_from_git(self.from_spec, self.project_dir)
+        else:
+          try:
+              self.env.mkdir(dockerized_dir)
+          except FileExistsError:
+              raise CommandError('Refusing to overwrite .dockerized')
 
-        composefile_path = self.project_dir.joinpath('.dockerized').joinpath('docker-compose.dockerized.yml')
-        self.env.write_file(composefile_path, composefile_content)
+          dockerfile_path = dockerized_dir.joinpath('Dockerfile.dockerized')
+          self.env.write_file(dockerfile_path, dockerfile_content)
 
-        gitignore_path = self.project_dir.joinpath('.dockerized').joinpath('.gitignore')
-        self.env.write_file(gitignore_path, gitignore_content)
+          composefile_path = dockerized_dir.joinpath('docker-compose.dockerized.yml')
+          self.env.write_file(composefile_path, composefile_content)
+
+          gitignore_path = dockerized_dir.joinpath('.gitignore')
+          self.env.write_file(gitignore_path, gitignore_content)

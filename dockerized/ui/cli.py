@@ -38,13 +38,25 @@ def main(loglevel):
 
 
 @main.command(
-    short_help='Initialize Dockerized in the current directory'
+    short_help='Initialize Dockerized in the current directory',
+    context_settings=dict(
+        max_content_width=120,
+    ),
 )
-def init():
+@click.option(
+    '-f', '--from', 'from_spec',
+    type=click.STRING,
+    help="URL to copy .dockerized/ from (must be git-clone compatible). See https://github.com/benzaita/dockerized-cli/wiki/Examples",
+)
+def init(from_spec):
     with friendly_dockerized_errors(click):
-        init_command = InitCommand(Path.cwd())
+        init_command = InitCommand(Path.cwd(), from_spec=from_spec)
         init_command.run()
-    click.echo('created')
+
+    if from_spec:
+        click.echo(f"initialized .dockerized/ from {from_spec}")
+    else:
+        click.echo('created')
 
 
 @main.command(
