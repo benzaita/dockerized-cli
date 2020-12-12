@@ -27,6 +27,11 @@ $ dockerized init
 $ echo FROM python:3.9 > .dockerized/Dockerfile.dockerized
 ```
 
+or use an example:
+```shell
+$ dockerized init --from https://github.com/benzaita/dockerized-example-python.git
+```
+
 Then run a command inside that environment:
 ```shell
 $ dockerized exec python --version
