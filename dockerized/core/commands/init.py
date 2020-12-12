@@ -44,6 +44,9 @@ class InitCommand:
 
     def run(self):
         dockerized_dir = self.project_dir.joinpath('.dockerized')
+        if self.env.path_exists(dockerized_dir):
+          raise CommandError('Refusing to overwrite .dockerized')
+
 
         if self.from_spec:
           logger.info(f"Initializing from {self.from_spec}")

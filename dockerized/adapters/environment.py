@@ -46,5 +46,7 @@ class Environment:
         path.rmdir()
 
     def clone_dockerized_from_git(self, url: str, dest: Path):
-        subprocess.run(['git', 'clone', url, '--depth', '1', dest], check=True)
-        subprocess.run(['rm', '-rf', dest.joinpath('.git')], check=True)
+        tmp_dir = dest.joinpath('.dockerized-temp')
+        subprocess.run(['git', 'clone', url, '--depth', '1', tmp_dir], check=True)
+        subprocess.run(['cp', '-r', tmp_dir.joinpath('.dockerized'), dest], check=True)
+        subprocess.run(['rm', '-rf', tmp_dir], check=True)

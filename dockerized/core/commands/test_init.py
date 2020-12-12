@@ -73,6 +73,7 @@ class TestInitCommand(unittest.TestCase):
 
     def test_uses_from_spec(self):
         env = MagicMock(spec=Environment)
+        env.path_exists = MagicMock(return_value=False)
         env.clone_dockerized_from_git = MagicMock()
 
         init_command = InitCommand(self.temp_dir, from_spec='from-url', env=env)

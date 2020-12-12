@@ -43,7 +43,7 @@ Python 3.9.0
 
 # Examples
 
-See the [examples directory](examples/).
+See the [examples wiki page](https://github.com/benzaita/dockerized-cli/wiki/Examples).
 
 # Advanced Topics
 
