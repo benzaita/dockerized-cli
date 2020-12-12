@@ -33,6 +33,9 @@ lock
 prepared
 """
 
+readme_content = """
+This directory is used by [dockerized](https://github.com/benzaita/dockerized-cli/).
+"""
 
 class InitCommand:
     project_dir: Path
@@ -65,3 +68,6 @@ class InitCommand:
 
           gitignore_path = dockerized_dir.joinpath('.gitignore')
           self.env.write_file(gitignore_path, gitignore_content)
+
+          readme_path = dockerized_dir.joinpath('README.md')
+          self.env.write_file(readme_path, readme_content)
