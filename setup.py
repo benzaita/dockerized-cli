@@ -4,7 +4,7 @@ import json
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-version = "0.14.1"
+version = "0.15.0"
 
 setup(
     name="dockerized",
