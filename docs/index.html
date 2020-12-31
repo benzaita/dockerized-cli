@@ -1,0 +1,124 @@
+<html>
+
+<head>
+    <title>dockerized</title>
+    <link rel="stylesheet" type="text/css" href="styles/main.css" />
+</head>
+
+<body>
+    <header>
+        <img src="assets/dockerized.svg" width="200"/>
+        <h1>dockerized</h1>
+        <h2>
+            Seamlessly execute commands in a container
+        </h2>
+        <p>
+            <a href="https://github.com/benzaita/dockerized-cli">Source</a> |
+            <a href="https://github.com/benzaita/dockerized-cli/wiki/Examples">Examples</a>
+        </p>
+    </header>
+    <main>
+        <article class="highlights">
+            <div>
+                <section>
+                    <figure><img src="assets/code.svg"/></figure>
+                    <h1>Toolset as Code</h1>
+                    <p>
+                        Declare which build and/or development tools are needed in code, rather than in a README file.
+                    </p>
+                </section>
+                <section>
+                    <figure><img src="assets/door.svg"/></figure>
+                    <h1>Easy onboarding</h1>
+                    <p>
+                        Bootstrapping a development environment is as easy as running <code>dockerized shell</code>.
+                    </p>
+                </section>
+                <section>
+                    <figure><img src="assets/checkmark.svg"/></figure>
+                    <h1>No more "Works on my machine"</h1>
+                    <p>
+                        No more "Works on my machine" because everyone in the team is using
+                        exactly the same toolset.
+                    </p>
+                </section>
+                <section>
+                    <figure><img src="assets/flip-horizontal.svg"/></figure>
+                    <h1>Consistency with CI</h1>
+                    <p>
+                        Your CI can use exactly the same toolset as your developers.
+                    </p>
+                </section>
+                <section>
+                    <figure><img src="assets/dock-row.svg"/></figure>
+                    <h1>Isolated environments</h1>
+                    <p>
+                        No need for <code>nvm</code>, <code>virtualenv</code>, <code>SDKMAN</code>, and such. Each
+                        development environment is isolated.
+                    </p>
+                </section>
+                <section>
+                    <figure><img src="assets/drink-margarita.svg"/></figure>
+                    <h1>Simple</h1>
+                    <p>
+                        You no longer need to maintain messy <code>docker run</code> commands yourself.
+                    </p>
+                </section>
+                <section>
+                    <figure><img src="assets/magic-wand.svg"/></figure>
+                    <h1>Seamless</h1>
+                    <p>
+                        Just prepend any command with <code>dockerized exec</code>.
+                    </p>
+                </section>
+                <section>
+                    <figure><img src="assets/vscode.svg"/></figure>
+                    <h1>Visual Studio Code</h1>
+                    <p>
+                        "dockerized" complements VS Code and can use the <a
+                            href="https://code.visualstudio.com/docs/remote/containers">Remote Container</a>
+                        you already configured.
+                    </p>
+                </section>
+                <section>
+                    <figure><img src="assets/emoji.svg"/></figure>
+                    <h1>Opt in</h1>
+                    <p>
+                        You can use the "dockerized" development environment, or set up one
+                        directly on your machine. Unlike other tools
+                        "dockerized" is a non-intrusive guest on your machine.
+                    </p>
+                </section>
+                <section>
+                    <figure><img src="assets/fast.svg"/></figure>
+                    <h1>Caching</h1>
+                    <p>
+                        "dockerized" can <a href="https://github.com/benzaita/dockerized-cli/wiki/Caching-the-'dockerized'-image">cache</a> the build environment to speed up builds on CI pipelines.
+                    </p>
+                </section>
+            </div>
+        </article>
+        <article>
+            <header>
+                <h1>Getting Started</h1>
+            </header>
+            <p>Install:</p>
+            <pre>$ pip install dockerized</pre>
+            <p>Initialize:</p>
+            <pre>$ dockerized init --from https://github.com/benzaita/dockerized-example-python.git</pre>
+            <p>Then run a command inside that environment:</p>
+            <pre>
+$ dockerized exec python --version
+...
+Python 3.9.0</pre>
+        </article>
+    </main>
+    <footer>
+        <p>
+            <a href="https://github.com/benzaita/dockerized-cli">Source</a> |
+            Icons from <a href="https://github.com/microsoft/fluentui-system-icons">FluentUI System Icons</a>
+        </p>
+    </footer>
+</body>
+
+</html>
