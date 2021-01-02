@@ -5,15 +5,7 @@ Easily Docker-ize your build/development environment and seamlessly run commands
 
 _dockerized_ is a tool for seamlessly executing commands in a container. It takes care of the details so you can run a command in a container as if it was running on your machine - just prepend any command with `dockerized exec` to have it run in the container.
 
-This is especially useful for building things. For example, if your project needs Java and Maven to build, you can put these build dependencies in a Dockerfile and then just replace `mvn` with `dockerized exec mvn`. If your tests need a Postgresql database to run, add that in a Docker Compose file and just run `dockerized exec mvn test`.
-
-That approach encourages versioning the build dependencies _alongside_ the application code.
-
-* Never again an outdated README file with all the tools you need to install to build your project.
-* Never again your build dependencies managed in another repo which falls out of sync with your code.
-
-Your build dependencies are part of your project!
-
+See https://benzaita.github.io/dockerized-cli/index.html
 # Getting Started
 
 Install _dockerized_:

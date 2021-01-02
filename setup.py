@@ -14,7 +14,7 @@ setup(
     description="Seamlessly execute commands in a container",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/benzaita/dockerized-cli",
+    url="https://benzaita.github.io/dockerized-cli/index.html",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
