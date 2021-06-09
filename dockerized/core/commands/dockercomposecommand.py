@@ -30,7 +30,8 @@ class DockerComposeCommand:
         self.docker_compose = docker_compose or DockerCompose(
             compose_files=self.config.compose_files(),
             project_dir=self.project_dir,
-            service_name=self.config.service_name()
+            service_name=self.config.service_name(),
+            run_args_template_strings=self.config.run_args_template_strings(),
         )
 
         self.project = Project(project_dir=self.project_dir, env=self.env, docker_compose=self.docker_compose)

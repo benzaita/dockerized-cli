@@ -8,7 +8,15 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_CONFIG = {
     'compose_files': ['./docker-compose.dockerized.yml'],
-    'service_name': 'dockerized'
+    'service_name': 'dockerized',
+    'run_args_template_strings': [
+        '--rm',
+        '--service-ports',
+        '-v', '${project_dir}:${project_dir}',
+        '-w', '${working_dir}',
+        '${service_name}',
+        '${command}'
+    ],
 }
 
 class Config:
@@ -32,6 +40,8 @@ class Config:
         except yaml.YAMLError as e:
             raise DockerizedError(f"Failed to read configuration file ({str(config_file)}): {e}")
 
+        yaml_dict = {**DEFAULT_CONFIG, **yaml_dict}
+        
         return Config(project_dir, yaml_dict)
 
     def __init__(self, project_dir: Path, config_dict: dict):
@@ -46,3 +56,6 @@ class Config:
 
     def service_name(self) -> str:
         return self.config_dict['service_name']
+    
+    def run_args_template_strings(self) -> bool:
+        return self.config_dict['run_args_template_strings']

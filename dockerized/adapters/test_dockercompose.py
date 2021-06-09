@@ -13,23 +13,39 @@ class MockProcess:
 
 class TestDockerCompose(TestCase):
     def test_run_executed_run(self):
-        docker_compose = DockerCompose([Path('composefile')], Path('project-dir'), 'dockerized')
+        docker_compose = DockerCompose(
+            compose_files=[Path('fake-composefile')],
+            project_dir=Path('fake-project-dir'),
+            service_name='fake-service-name',
+            run_args_template_strings=[
+                '--rm',
+                '--service-ports',
+                '-v', '${project_dir}:${project_dir}',
+                '-w', '${working_dir}',
+                '${service_name}',
+                '${command}'
+            ])
         with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
-            docker_compose.run(Path('working-dir'), 'command')
+            docker_compose.run(Path('fake-working-dir'), 'fake-command')
         mock_Popen.assert_called_once_with([
             'docker-compose',
-            '-f', 'composefile',
-            '--project-name', 'project-dir',
+            '-f', 'fake-composefile',
+            '--project-name', 'fake-project-dir',
             'run',
             '--rm',
-            '-v', 'project-dir:project-dir',
-            '-w', 'working-dir',
-            'dockerized',
-            'command'
+            '--service-ports',
+            '-v', 'fake-project-dir:fake-project-dir',
+            '-w', 'fake-working-dir',
+            'fake-service-name',
+            'fake-command'
         ], stdout=mock.ANY, stderr=mock.ANY)
 
     def test_push_executes_push(self):
-        docker_compose = DockerCompose([Path('composefile')], Path('project-dir'), 'dockerized')
+        docker_compose = DockerCompose(
+            compose_files=[Path('composefile')],
+            project_dir=Path('project-dir'),
+            service_name='dockerized',
+            run_args_template_strings=[])
         with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
             docker_compose.push()
         mock_Popen.assert_called_once_with([
@@ -41,7 +57,11 @@ class TestDockerCompose(TestCase):
         ], stdout=mock.ANY, stderr=mock.ANY)
 
     def test_pull_executes_pull(self):
-        docker_compose = DockerCompose([Path('composefile')], Path('project-dir'), 'dockerized')
+        docker_compose = DockerCompose(
+            compose_files=[Path('composefile')],
+            project_dir=Path('project-dir'),
+            service_name='dockerized',
+            run_args_template_strings=[])
         with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
             docker_compose.pull()
         mock_Popen.assert_called_once_with([
@@ -53,7 +73,11 @@ class TestDockerCompose(TestCase):
         ], stdout=mock.ANY, stderr=mock.ANY)
 
     def test_build_executes_build(self):
-        docker_compose = DockerCompose([Path('composefile')], Path('project-dir'), 'dockerized')
+        docker_compose = DockerCompose(
+            compose_files=[Path('composefile')],
+            project_dir=Path('project-dir'),
+            service_name='dockerized',
+            run_args_template_strings=[])
         with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
             docker_compose.build()
         mock_Popen.assert_called_once_with([

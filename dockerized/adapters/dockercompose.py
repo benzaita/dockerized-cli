@@ -8,20 +8,23 @@ logger = logging.getLogger(__name__)
 
 
 class DockerCompose:
-    def __init__(self, compose_files: List[Path], project_dir: Path, service_name: str):
+    def __init__(self, compose_files: List[Path], project_dir: Path, service_name: str, run_args_template_strings: str):
         self.compose_files = compose_files
         self.project_dir = project_dir
         self.service_name = service_name
+        self.run_args_template_strings = run_args_template_strings
 
     def run(self, working_dir: Path, command: str):
-        docker_compose_args = [
-            'run',
-            '--rm',
-            '-v', f"{str(self.project_dir)}:{str(self.project_dir)}",
-            '-w', str(working_dir),
-            self.service_name,
-            command
-        ]
+        from string import Template
+        run_args_templates = map(Template, self.run_args_template_strings)
+        run_args = map(lambda t: t.safe_substitute({
+            'project_dir': str(self.project_dir),
+            'working_dir': str(working_dir),
+            'service_name': self.service_name,
+            'command': command,
+        }), run_args_templates)
+
+        docker_compose_args = ['run', *run_args]
         exit_code = self.execute_command(docker_compose_args)
         return exit_code
 

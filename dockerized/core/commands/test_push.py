@@ -17,7 +17,7 @@ class TestPushCommand(unittest.TestCase):
         env.get_working_dir = MagicMock(return_value=working_dir)
         env.unlink_file = MagicMock()
 
-        docker_compose = DockerCompose(compose_files=[Path('compose-file')], project_dir=project_dir, service_name='dockerized')
+        docker_compose = DockerCompose(compose_files=[Path('compose-file')], project_dir=project_dir, service_name='dockerized', run_args_template_strings=[])
         docker_compose.push = MagicMock()
 
         push_command = PushCommand(env=env, docker_compose=docker_compose)
