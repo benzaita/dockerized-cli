@@ -1,5 +1,7 @@
 site_name: dockerized
 site_url: https://benzaita.github.io/dockerized-cli/
+repo_url: https://github.com/benzaita/dockerized-cli/
+edit_uri: edit/docs/docs/
 
 nav:
     - Home: index.md
