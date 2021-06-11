@@ -1,0 +1,25 @@
+site_name: dockerized
+site_url: https://benzaita.github.io/dockerized-cli/
+
+nav:
+    - Home: index.md
+    - Tutorials:
+        - 'Quick Start': tutorials/quick_start.md
+    - 'How-To Guides':
+        - 'Provide AWS Credentials': how_to_guides/provide_aws_credentials.md
+        - 'Pass Environment Variables': how_to_guides/pass_environment_variables.md
+        - 'Cache the "dockerized" Docker image': how_to_guides/cache_the_dockerized_docker_image.md
+        - 'Utilize Package-Managers Cache': how_to_guides/utilize_package_managers_cache.md
+        - 'Use with VSCode Remote Containers': how_to_guides/use_with_vscode_remote_containers.md
+    - Explanations:
+        - 'How "dockerized exec" works': explanations/how_dockerized_exec_works.md
+        - 'Why use dockerized': explanations/why_use_dockerized.md
+    - Reference:
+        - 'Starter Kits': reference/starter_kits.md
+
+theme:
+  name: material
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
