@@ -21,7 +21,17 @@ nav:
 
 theme:
   name: material
+  custom_dir: overrides
 
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
+
+# TODO enable when mkdocs-material version >7.1.7 is available and also `mv overrides/partials/integrations/analytics.html overrides/partials/integrations/analytics/microanalytics.html`
+# extra:
+#   analytics:
+#     provider: microanalytics
+
+google_analytics:
+   - dummy
+   - auto
