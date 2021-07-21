@@ -3,6 +3,7 @@ import subprocess
 from pathlib import Path
 from typing import List
 import logging
+from hashlib import md5
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,7 @@ class DockerCompose:
         args = [
             'docker-compose',
             *self.__get_compose_filename_args(self.compose_files),
-            '--project-name', str(self.project_dir).lower()
+            '--project-name', self.__get_project_name(),
         ]
         args.extend(docker_compose_args)
         logger.info(f"Running: {args}")
@@ -58,6 +59,12 @@ class DockerCompose:
             raise e
         logger.info(f"Finished with exit-code {exit_code}")
         return exit_code
+
+    def __get_project_name(self):
+        project_dir_bytes = str(self.project_dir).encode()
+        project_dir_md5 = md5(project_dir_bytes)
+        hex_digest = project_dir_md5.hexdigest().lower()
+        return hex_digest
 
     def __get_compose_filename_args(self, compose_files: List[Path]):
         args = []

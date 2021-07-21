@@ -30,7 +30,7 @@ class TestDockerCompose(TestCase):
         mock_Popen.assert_called_once_with([
             'docker-compose',
             '-f', 'fake-composefile',
-            '--project-name', 'fake-project-dir',
+            '--project-name', '92c9986df24fe7bc679bea041fd2722b',
             'run',
             '--rm',
             '--service-ports',
@@ -40,10 +40,10 @@ class TestDockerCompose(TestCase):
             'fake-command'
         ], stdout=mock.ANY, stderr=mock.ANY)
     
-    def test_lowercases_project_name(self):
+    def test_generates_valid_project_name(self):
         docker_compose = DockerCompose(
             compose_files=[Path('fake-composefile')],
-            project_dir=Path('FAKE-PROJECT-DIR'),
+            project_dir=Path('FAKE-PROJECT-DIR-/!@#$%^&*()_'),
             service_name='fake-service-name',
             run_args_template_strings=[])
         with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
@@ -51,7 +51,7 @@ class TestDockerCompose(TestCase):
         mock_Popen.assert_called_once_with([
             'docker-compose',
             '-f', 'fake-composefile',
-            '--project-name', 'fake-project-dir',
+            '--project-name', '464ae18505ef29b461a0e48cbd12891d',
         ], stdout=mock.ANY, stderr=mock.ANY)
 
     def test_push_executes_push(self):
@@ -65,7 +65,7 @@ class TestDockerCompose(TestCase):
         mock_Popen.assert_called_once_with([
             'docker-compose',
             '-f', 'composefile',
-            '--project-name', 'project-dir',
+            '--project-name', '799ca259be9aa3c5749381ba532be1ae',
             'push',
             'dockerized'
         ], stdout=mock.ANY, stderr=mock.ANY)
@@ -81,7 +81,7 @@ class TestDockerCompose(TestCase):
         mock_Popen.assert_called_once_with([
             'docker-compose',
             '-f', 'composefile',
-            '--project-name', 'project-dir',
+            '--project-name', '799ca259be9aa3c5749381ba532be1ae',
             'pull',
             'dockerized'
         ], stdout=mock.ANY, stderr=mock.ANY)
@@ -97,7 +97,7 @@ class TestDockerCompose(TestCase):
         mock_Popen.assert_called_once_with([
             'docker-compose',
             '-f', 'composefile',
-            '--project-name', 'project-dir',
+            '--project-name', '799ca259be9aa3c5749381ba532be1ae',
             'build',
             'dockerized'
         ], stdout=mock.ANY, stderr=mock.ANY)
