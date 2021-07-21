@@ -12,7 +12,7 @@ class MockProcess:
 
 
 class TestDockerCompose(TestCase):
-    def test_run_executed_run(self):
+    def test_run_executes_run(self):
         docker_compose = DockerCompose(
             compose_files=[Path('fake-composefile')],
             project_dir=Path('fake-project-dir'),
@@ -38,6 +38,20 @@ class TestDockerCompose(TestCase):
             '-w', 'fake-working-dir',
             'fake-service-name',
             'fake-command'
+        ], stdout=mock.ANY, stderr=mock.ANY)
+    
+    def test_lowercases_project_name(self):
+        docker_compose = DockerCompose(
+            compose_files=[Path('fake-composefile')],
+            project_dir=Path('FAKE-PROJECT-DIR'),
+            service_name='fake-service-name',
+            run_args_template_strings=[])
+        with mock.patch.object(subprocess, 'Popen', return_value=MockProcess()) as mock_Popen:
+            docker_compose.execute_command([])
+        mock_Popen.assert_called_once_with([
+            'docker-compose',
+            '-f', 'fake-composefile',
+            '--project-name', 'fake-project-dir',
         ], stdout=mock.ANY, stderr=mock.ANY)
 
     def test_push_executes_push(self):

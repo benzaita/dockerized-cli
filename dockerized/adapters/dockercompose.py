@@ -46,7 +46,7 @@ class DockerCompose:
         args = [
             'docker-compose',
             *self.__get_compose_filename_args(self.compose_files),
-            '--project-name', str(self.project_dir)
+            '--project-name', str(self.project_dir).lower()
         ]
         args.extend(docker_compose_args)
         logger.info(f"Running: {args}")
