@@ -212,11 +212,11 @@ class EndToEndTest(AbstractEndToEndTest):
         non_empty_stderrs = [s for s in stderrs if re.search(r'Creating network', s) is not None]
 
         self.assertTrue(len(non_empty_stderrs) == 1,
-                        f"Expected only one STDERR to be not empty, got {len(non_empty_stderrs)}:\n" +
+                        f"Expected exactly one STDERR to be not empty, got {len(non_empty_stderrs)}:\n" +
                         '\n---\n'.join(non_empty_stderrs))
 
-        self.assertTrue(len(non_empty_stdouts) == 1,
-                        f"Expected only one STDOUT to be not empty, got {len(non_empty_stdouts)}:\n" +
+        self.assertTrue(len(non_empty_stdouts) == 0,
+                        f"Expected all STDOUT to be empty, got:\n" +
                         '\n---\n'.join(non_empty_stdouts))
 
         self.assertTrue(len(non_zero_exit_codes) == 0,
