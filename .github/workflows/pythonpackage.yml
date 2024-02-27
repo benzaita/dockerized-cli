@@ -44,8 +44,8 @@ jobs:
         make dist
     - name: Publish (test PyPi)
       env:
-        POETRY_HTTP_BASIC_FOO_USERNAME: __token__
-        POETRY_HTTP_BASIC_FOO_PASSWORD: ${{ secrets.test_pypi_apikey }}
+        POETRY_HTTP_BASIC_TESTPYPI_USERNAME: __token__
+        POETRY_HTTP_BASIC_TESTPYPI_PASSWORD: ${{ secrets.test_pypi_apikey }}
       run: |
         make publish.testpypi
     - name: Install (test PyPi)
@@ -54,8 +54,8 @@ jobs:
          dockerized version
     - name: Publish (PyPi)
       env:
-        POETRY_HTTP_BASIC_FOO_USERNAME: __token__
-        POETRY_HTTP_BASIC_FOO_PASSWORD: ${{ secrets.pypi_apikey }}
+        POETRY_HTTP_BASIC_PYPI_USERNAME: __token__
+        POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.pypi_apikey }}
       run: |
         make publish
     - name: Install (PyPi)
