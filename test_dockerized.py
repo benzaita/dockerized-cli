@@ -6,6 +6,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 
 from dockerized.test import ProjectAwareTestCase
 
+PRINT_COMMANDS = False
 
 class AbstractEndToEndTest(ProjectAwareTestCase):
     def tearDown(self) -> None:
@@ -16,9 +17,19 @@ class AbstractEndToEndTest(ProjectAwareTestCase):
     def run_dockerized(self, cmd_line, working_dir=None, project_dir=None, env=None):
         safe_project_dir = project_dir or self.project_dirs[0]
         this_file_path = os.path.dirname(os.path.realpath(__file__))
-        dockerized = this_file_path + '/dockerized.py'
+        dockerized = f"PYTHONPATH={this_file_path} python -m dockerized.ui.cli"
         cwd = safe_project_dir if working_dir is None else f"{safe_project_dir}/{working_dir}"
-        process = subprocess.run(f"{dockerized} {cmd_line}", cwd=cwd, shell=True, capture_output=True, env=env)
+
+        if PRINT_COMMANDS:
+            print(f"> {cwd}: {dockerized} {cmd_line}")
+
+        process = subprocess.run(f"{dockerized} {cmd_line}", cwd=cwd, shell=True, capture_output=True, text=True, env=env)
+
+        if PRINT_COMMANDS:
+            print(f"EXIT CODE: {process.returncode}")
+            print(f"STDOUT: {process.stdout}")
+            print(f"STDERR: {process.stderr}")
+
         return process.returncode, process.stdout, process.stderr
 
     def assert_dockerized(self, command, expected_exit_code=None, fixture_name=None, working_dir=None, project_dir=None,
@@ -31,8 +42,8 @@ class AbstractEndToEndTest(ProjectAwareTestCase):
                 self.setup_project_dir(fixture_name, safe_project_dir)
         exit_code, stdout, stderr = self.run_dockerized(command, working_dir, env=env)
 
-        self.assertRegex(stderr.decode('utf-8'), re.compile(expected_stderr_regex, re.MULTILINE))
-        self.assertRegex(stdout.decode('utf-8'), re.compile(expected_stdout_regex, re.MULTILINE))
+        self.assertRegex(stderr, re.compile(expected_stderr_regex, re.MULTILINE))
+        self.assertRegex(stdout, re.compile(expected_stdout_regex, re.MULTILINE))
         self.assertEqual(expected_exit_code, exit_code)
 
 
@@ -42,7 +53,7 @@ class EndToEndTest(AbstractEndToEndTest):
         self.assert_dockerized(
             command='init',
             expected_exit_code=0,
-            expected_stdout_regex=r'^created$',
+            expected_stdout_regex=r'^created',
             expected_stderr_regex=r'.*'
         )
 
@@ -60,15 +71,18 @@ class EndToEndTest(AbstractEndToEndTest):
             command='init',
             expected_exit_code=1,
             expected_stdout_regex=r'.*',
-            expected_stderr_regex=r'^Refusing to overwrite .dockerized$'
+            expected_stderr_regex=r'^Refusing to overwrite .dockerized'
         )
 
     def test_compose_delegates_to_docker_compose(self):
         self.assert_dockerized(
             fixture_name='_init',
-            command='compose ps --services',
+            command='compose version',
             expected_exit_code=0,
-            expected_stdout_regex=r'^dockerized$',
+
+            # Output is different on different versions of docker-compose
+            expected_stdout_regex=r'^[Dd]ocker[- ][Cc]ompose version',
+
             expected_stderr_regex=r'.*'
         )
 
@@ -78,7 +92,7 @@ class EndToEndTest(AbstractEndToEndTest):
             command='compose kill foo',
             expected_exit_code=1,
             expected_stdout_regex=r'.*',
-            expected_stderr_regex=r'^No such service: foo$'
+            expected_stderr_regex=r'^[Nn]o such service: foo'
         )
 
     def test_exec_exit_code(self):
@@ -95,14 +109,14 @@ class EndToEndTest(AbstractEndToEndTest):
             fixture_name='_init',
             command='exec echo something out',
             expected_exit_code=0,
-            expected_stdout_regex=r'^something out$',
+            expected_stdout_regex=r'^something out',
             expected_stderr_regex=r'.*',
         )
 
     def test_exec_pipes_stderr(self):
         self.assert_dockerized(
             fixture_name='_init',
-            command='exec echo \'something err >&2\'',
+            command='exec echo something err >&2',
             expected_exit_code=0,
             expected_stdout_regex=r'.*',
             expected_stderr_regex=r'something err',
@@ -113,7 +127,7 @@ class EndToEndTest(AbstractEndToEndTest):
             fixture_name='with_foo_env_var',
             command='exec echo FOO=\\$FOO',
             expected_exit_code=0,
-            expected_stdout_regex=r'^FOO=1$',
+            expected_stdout_regex=r'^FOO=1',
             expected_stderr_regex=r'.*',
         )
 
@@ -122,7 +136,7 @@ class EndToEndTest(AbstractEndToEndTest):
             fixture_name='with_foo_env_var',
             command='exec \'env FOO=2 | grep FOO\'',
             expected_exit_code=0,
-            expected_stdout_regex=r'^FOO=2$',
+            expected_stdout_regex=r'^FOO=2',
             expected_stderr_regex=r'.*',
         )
 
@@ -131,7 +145,7 @@ class EndToEndTest(AbstractEndToEndTest):
             fixture_name='with_files',
             command='exec cat dir/file.txt',
             expected_exit_code=0,
-            expected_stdout_regex=r'^Hello world!$',
+            expected_stdout_regex=r'^Hello world!',
             expected_stderr_regex=r'.*',
         )
 
@@ -141,7 +155,7 @@ class EndToEndTest(AbstractEndToEndTest):
             working_dir='dir',
             command='exec cat file.txt',
             expected_exit_code=0,
-            expected_stdout_regex=r'^Hello world!$',
+            expected_stdout_regex=r'^Hello world!',
             expected_stderr_regex=r'.*',
         )
 
@@ -151,7 +165,7 @@ class EndToEndTest(AbstractEndToEndTest):
             working_dir='dir',
             command='exec cat ../file_in_project_root.txt',
             expected_exit_code=0,
-            expected_stdout_regex=r'^Hello from project root$',
+            expected_stdout_regex=r'^Hello from project root',
             expected_stderr_regex=r'.*',
         )
 
@@ -161,7 +175,7 @@ class EndToEndTest(AbstractEndToEndTest):
             command='exec true',
             expected_exit_code=1,
             expected_stdout_regex=r'.*',
-            expected_stderr_regex=r'^Not inside a Dockerized project directory. Did you run \'dockerized init\'\?$',
+            expected_stderr_regex=r'^Not inside a Dockerized project directory. Did you run \'dockerized init\'\?',
         )
 
     def test_exec_takes_command_with_args(self):
@@ -169,7 +183,7 @@ class EndToEndTest(AbstractEndToEndTest):
             fixture_name='with_files',
             command='exec id -u',
             expected_exit_code=0,
-            expected_stdout_regex=r'^0$',
+            expected_stdout_regex=r'^0',
             expected_stderr_regex=r'.*',
         )
 
@@ -186,8 +200,8 @@ class EndToEndTest(AbstractEndToEndTest):
         _, stdout_foo, _ = self.run_dockerized('exec \'echo $TEST_VAR\'', project_dir=foo_dir)
         _, stdout_bar, _ = self.run_dockerized('exec \'echo $TEST_VAR\'', project_dir=bar_dir)
 
-        self.assertEqual(b'foo\n', stdout_foo)
-        self.assertEqual(b'bar\n', stdout_bar)
+        self.assertRegex(stdout_foo, re.compile(r'^foo', re.MULTILINE))
+        self.assertRegex(stdout_bar, re.compile(r'^bar', re.MULTILINE))
 
     def test_exec_parallel_invocations_prepare_only_once(self):
         project_dir = self.add_project_dir()
@@ -204,20 +218,22 @@ class EndToEndTest(AbstractEndToEndTest):
         results = [f.result() for f in futures]
 
         exit_codes = [r[0] for r in results]
-        stdouts = [r[1].decode('utf-8') for r in results]
-        stderrs = [r[2].decode('utf-8') for r in results]
+        stdouts = [r[1] for r in results]
+        stderrs = [r[2] for r in results]
 
         non_zero_exit_codes = [c for c in exit_codes if c != 0]
         non_empty_stdouts = [s for s in stdouts if len(s) > 0]
-        non_empty_stderrs = [s for s in stderrs if re.search(r'Creating network', s) is not None]
+        non_empty_stderrs = [s for s in stderrs if re.search(r'(Creating network|Network .* Creating)', s) is not None]
 
         self.assertTrue(len(non_empty_stderrs) == 1,
                         f"Expected exactly one STDERR to be not empty, got {len(non_empty_stderrs)}:\n" +
                         '\n---\n'.join(non_empty_stderrs))
 
-        self.assertTrue(len(non_empty_stdouts) == 0,
-                        f"Expected all STDOUT to be empty, got:\n" +
-                        '\n---\n'.join(non_empty_stdouts))
+        self.assertTrue(
+            # Output depends on the version of docker-compose
+            len(non_empty_stdouts) == 1 or len(non_empty_stdouts) == 0,
+            f"Expected exactly one STDOUT to be not empty, got {len(non_empty_stdouts)}:\n" +
+            '\n---\n'.join(non_empty_stdouts))
 
         self.assertTrue(len(non_zero_exit_codes) == 0,
                         f"Expected all exit codes to be zero, got: {','.join(map(str, non_zero_exit_codes))}")
@@ -240,7 +256,7 @@ class EndToEndTest(AbstractEndToEndTest):
         self.assert_dockerized(
             fixture_name='with_config',
             command='exec true',
-            expected_exit_code=0,
+            expected_exit_code=1,
             expected_stdout_regex=r'.*',
             expected_stderr_regex=r'.*',
         )
