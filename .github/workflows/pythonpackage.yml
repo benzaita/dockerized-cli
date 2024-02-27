@@ -12,56 +12,52 @@ jobs:
       matrix:
         python-version: [3.11]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pipenv
-        pipenv sync --dev
+        pipx install poetry
+        make setup
     - name: Test
       run: |
-        pipenv run invoke test
+        make test
 
   dist:
     needs: [build]
     if: startsWith(github.ref, 'refs/heads/master')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python 3.11
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v5
       with:
         python-version: 3.11
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pipenv
-        pipenv sync --dev
+        pipx install poetry
+        make setup
     - name: Prepare distribution
       run: |
-        pipenv run invoke dist
+        make dist
     - name: Publish (test PyPi)
       env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.test_pypi_apikey }}
+        POETRY_HTTP_BASIC_FOO_USERNAME: __token__
+        POETRY_HTTP_BASIC_FOO_PASSWORD: ${{ secrets.test_pypi_apikey }}
       run: |
-         pip install twine
-         python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+        make publish.testpypi
     - name: Install (test PyPi)
       run: |
          pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple dockerized
          dockerized version
     - name: Publish (PyPi)
       env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.pypi_apikey }}
+        POETRY_HTTP_BASIC_FOO_USERNAME: __token__
+        POETRY_HTTP_BASIC_FOO_PASSWORD: ${{ secrets.pypi_apikey }}
       run: |
-        pip install twine
-        python -m twine upload dist/*
+        make publish
     - name: Install (PyPi)
       run: |
         pip install dockerized

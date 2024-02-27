@@ -1,4 +1,4 @@
 compose_files:
-    - ../foo/docker-compose.yml
     - ./docker-compose.dockerized.yml
+    - ../foo/docker-compose.yml
 service_name: app

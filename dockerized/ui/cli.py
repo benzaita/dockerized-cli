@@ -146,3 +146,7 @@ def version():
     version_command = VersionCommand()
     version = version_command.run()
     click.echo(version)
+
+
+if __name__ == "__main__":
+    main()

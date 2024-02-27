@@ -1,20 +1,35 @@
 default:
 	:
 
+.PHONY: setup
 setup:
-	pipenv sync --dev
+	poetry install --no-root
 
+.PHONY: test
 test:
-	pipenv run invoke test
+	poetry run python -m unittest -v
 
+.PHONY: dist
 dist:
-	pipenv run invoke dist
+	poetry build
+
+.PHONY: publish.testpypi
+publish.testpypi:
+	poetry config repositories.testpypi https://test.pypi.org/legacy/
+	poetry publish --repository testpypi
+
+.PHONY: publish
+publish:
+	poetry publish
 
 bumpversion.major:
-	pipenv run invoke bumpversion major
+	poetry version major
+	echo "VERSION = '$$(poetry version -s)'" > dockerized/version.py
 
 bumpversion.minor:
-	pipenv run invoke bumpversion minor
+	poetry version minor
+	echo "VERSION = '$$(poetry version -s)'" > dockerized/version.py
 
 bumpversion.patch:
-	pipenv run invoke bumpversion patch
+	poetry version patch
+	echo "VERSION = '$$(poetry version -s)'" > dockerized/version.py
